@@ -186,6 +186,15 @@ vis7 = array([-1, -3, -4, -5, -6])
 [crossings3, riseSet3, visTree3] = zeroCrossingFit(vis7, linspace(0, 5, num=5), "hey")
 print(visTree3)
 
-
+# %% README Example
+t = array([0, 1, 2, 3, 4])  # time vector
+vis1 = array([-1, -0.1, 0.5, 4, 2])
+vis2 = array([-2, -1, -0.5, 1, 1.1])
+[_, _, vis_tree1] = zeroCrossingFit(vis1, t, "pair1")
+[_, _, vis_tree2] = zeroCrossingFit(vis2, t, "pair2")
+combined_tree = vis_tree1 | vis_tree2
+print(vis_tree1)
+print(vis_tree2)
+print(combined_tree)
 # %%
 print("done")
