@@ -35,7 +35,7 @@ print(vis_bool)
 ```
 
 ### Example 3
-A series of visibility function values can be represented as an `ndarray` or `IntervalTree` via the `zeroCrossingFit` function. This is handy if you want to calculate visibility windows between two objects.
+A series of visibility function values can be represented as a couple of `ndarray`s or an `IntervalTree` via the `zeroCrossingFit` function. This is handy if you want to calculate visibility windows between two objects.
 ```python
 t = array([0, 1, 2, 3, 4]) # time vector
 vis = array([-1, -0.1, 0.5, 4, 2]) # objects become visible to each other between t[1] and t[2]
