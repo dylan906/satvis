@@ -1,6 +1,6 @@
 [project]
-name = "sat_visibility"
-dynamic = ["version"]
+name = "sat_vis"
+version = "0.0.1"
 description = "Satellite LOS visibility calculator"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -31,17 +31,16 @@ dev = [
 [build-system]
 
 requires = [
-    "setuptools>=42",
+    "setuptools>=64",
     "wheel>=0.29.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = [
-    "sat_visibility",
+    "sat_vis",
 ]
 zip-safe = false
-[tool.setuptools.dynamic]
-version = {attr = "sat_visibility.__version__"}
+
 
 [tool.isort]
 # Play nicely with black
@@ -54,7 +53,7 @@ line_length = 79
 line_ending = "\n"
 # Whitelist first party imports
 known_first_party = [
-    "sat_visibility",
+    "sat_vis",
 ]
 # Import headers
 import_heading_stdlib = "Standard Library Imports"
