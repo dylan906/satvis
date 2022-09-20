@@ -177,9 +177,6 @@ ax.plot(crossings, riseSet, marker="|", linestyle="None")
 ax.plot(tLong, vis6)
 ax.set_title("multiple crossings, ends visible")
 
-
-plt.show()
-
 # %%
 # Check IntervalTree
 vis7 = array([-1, -3, -4, -5, -6])
@@ -197,4 +194,6 @@ print(vis_tree1)
 print(vis_tree2)
 print(combined_tree)
 # %%
+plt.show()
+
 print("done")
