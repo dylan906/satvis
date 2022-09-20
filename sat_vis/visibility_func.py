@@ -2,6 +2,9 @@
 # %% Imports
 from __future__ import annotations
 
+# Standard Library Imports
+from typing import Tuple
+
 # Third Party Imports
 from intervaltree import Interval, IntervalTree
 from numpy import append, arange, arccos, array, dot, isnan, isreal, ndarray, sign
@@ -10,7 +13,12 @@ from numpy.polynomial import Polynomial
 
 
 # %% Visibility function
-def visibilityFunc(r1: ndarray, r2: ndarray, RE: float, hg: float):
+def visibilityFunc(
+    r1: ndarray,
+    r2: ndarray,
+    RE: float,
+    hg: float,
+) -> Tuple[float, float, float, float]:
     """Calculate visibility function for two position vectors.
 
     Args:
@@ -85,7 +93,11 @@ def visibilityFunc(r1: ndarray, r2: ndarray, RE: float, hg: float):
 
 
 # %% Calculate visibility windows
-def zeroCrossingFit(v: ndarray, t: ndarray, id: object = None):
+def zeroCrossingFit(
+    v: ndarray,
+    t: ndarray,
+    id: object = None,
+) -> Tuple[ndarray[float], ndarray[float], IntervalTree]:
     """Interpolates visibility windows from sparse visibility data.
 
         Fit curves around zero-crossings of visibility function.
@@ -188,7 +200,11 @@ def zeroCrossingFit(v: ndarray, t: ndarray, id: object = None):
     return crossings, riseSet, tree
 
 
-def findCrossing(t: ndarray, v: ndarray, order) -> ndarray:
+def findCrossing(
+    t: ndarray,
+    v: ndarray,
+    order: int,
+) -> ndarray[float]:
     """Fits a 3rd order polynomial to 4 points and finds root.
 
     Args:
@@ -197,7 +213,7 @@ def findCrossing(t: ndarray, v: ndarray, order) -> ndarray:
         order (`int`): Order of polyfit.
 
     Returns:
-        `ndarray`: [1, ] Time of zero-crossing.
+        `ndarray[float]`: [1, ] Time of zero-crossing.
     """
     # fit a 3rd-order polynomial
     poly = Polynomial.fit(t, v, order)
@@ -221,7 +237,7 @@ def riseOrSet(v_i: float) -> int:
         v_i (`float`): Value of visibility function
 
     Returns:
-        `int`: 1, -1, or 0 for rise , set, or anomaly, respectively.
+        `int`: 1, -1, or 0 for rise, set, or anomaly, respectively.
     """
     if sign(v_i) == 1:
         # rise time
@@ -235,7 +251,12 @@ def riseOrSet(v_i: float) -> int:
     return riseSet
 
 
-def isVis(r1: ndarray, r2: ndarray, RE: float, hg: float = 0) -> bool:
+def isVis(
+    r1: ndarray,
+    r2: ndarray,
+    RE: float,
+    hg: float = 0,
+) -> bool:
     """Shortcut wrapper to for boolean visibility.
 
     Args:
