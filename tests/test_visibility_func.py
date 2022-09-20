@@ -6,8 +6,8 @@ from __future__ import annotations
 from matplotlib import pyplot as plt
 from numpy import array, linspace, sin, zeros
 
-# Punch Clock Imports
-from scheduler_testbed.schedule_tree.visibility_func import visibilityFunc, zeroCrossingFit
+# Sat Vis Imports
+from sat_vis.visibility_func import visibilityFunc, zeroCrossingFit
 
 # %% Test visibilityFunc
 RE = 6378

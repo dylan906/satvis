@@ -6,9 +6,9 @@
 import matplotlib.pyplot as plt
 from numpy import arange, array, empty, shape
 
-# Punch Clock Imports
+# Sat Vis Imports
 # from scheduler_testbed.common.utilities import loadJSONFile
-from scheduler_testbed.schedule_tree.schedule_tree import getRiseSet, getVisHist
+from sat_vis.schedule_tree import getRiseSet, getVisHist
 
 # %% Test getVisHist
 print("\nTest getVisHist()...")
