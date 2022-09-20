@@ -47,8 +47,7 @@ version = {attr = "sat_visibility.__version__"}
 # Play nicely with black
 profile = "black"
 # Use .gitingore to skip files
-# skip_gitignore = true
-git_ignore = true
+skip_gitignore = true
 # Line length rules
 line_length = 79
 # Enforce Unix line endings
