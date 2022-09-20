@@ -1,0 +1,64 @@
+[project]
+name = "sat_visibility"
+dynamic = ["version"]
+description = "Satellite LOS visibility calculator"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    {name = "Dylan Penn", email = "dylanrpenn@vt.edu"}
+]
+
+dependencies = [
+    "matplotlib>=3.5",
+    "intervaltree>=3.1",
+]
+
+[project.optional-dependencies] 
+dev = [
+    "flake8",
+    "pylint",
+    "pytest",
+    "flake8-bugbear==22.4.25",
+    "flake8-builtins==1.5.3",
+    "flake8-docstrings==1.6.0",
+    "flake8-plugin-utils==1.3.2",
+    "flake8-pytest-style==1.6.0",
+    "flake8-rst-docstrings==0.2.6",
+    "black>=22.3.0",
+    "isort[colors]",
+]
+
+[build-system]
+
+requires = [
+    "setuptools>=42",
+    "wheel>=0.29.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+    "sat_visibility",
+]
+zip-safe = false
+[tool.setuptools.dynamic]
+version = {attr = "sat_visibility.__version__"}
+
+[tool.isort]
+# Play nicely with black
+profile = "black"
+# Use .gitingore to skip files
+skip_gitignore = true
+# git_ignore = true
+# Line length rules
+line_length = 79
+# Enforce Unix line endings
+line_ending = "\n"
+# Whitelist first party imports
+known_first_party = [
+    "sat_visibility",
+]
+# Import headers
+import_heading_stdlib = "Standard Library Imports"
+import_heading_thirdparty = "Third Party Imports"
+import_heading_firstparty = "Sat Vis Imports"
+import_heading_localfolder = "Local Imports"
