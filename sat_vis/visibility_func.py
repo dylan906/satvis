@@ -1,4 +1,4 @@
-"""Module of functions to use in calculating visibility windows."""
+"""Functions that calculate LOS visibility between two points near a spherical body."""
 # %% Imports
 from __future__ import annotations
 
@@ -13,18 +13,17 @@ from numpy.polynomial import Polynomial
 def visibilityFunc(r1: ndarray, r2: ndarray, RE: float, hg: float):
     """Calculate visibility function for two position vectors.
 
-    Raises:
-        r1 (``ndarray``): [3 X 1] ECI position vector of object 1
-        r2 (``ndarray``): [3 X 1] ECI position vector of object 2
-        RE (``float``): Radius of planet
-        hg (``float``): extra height restriction above planet surface
+    Args:
+        r1 (`ndarray`): [3 X 1] ECI position vector of object 1
+        r2 (`ndarray`): [3 X 1] ECI position vector of object 2
+        RE (`float`): Radius of planet
+        hg (`float`): extra height restriction above planet surface
 
     Returns:
-        v (``float``): value of visibility function (positive = objects can
-            see each other)
-        phi (``float``): angle between position vectors
-        alpha1 (``float``): construction angle 1
-        alpha2 (``float``): construction angle 2
+        v (`float`): value of visibility function (positive indicates objects can see each other)
+        phi (`float`): angle between position vectors
+        alpha1 (`float`): construction angle 1
+        alpha2 (`float`): construction angle 2
 
     From "Numerical Method for Rapidly Determining Satellite-Satellite
         and Satellite-Ground Station In-View Periods", by Lawton, 1987.
@@ -97,16 +96,16 @@ def zeroCrossingFit(v: ndarray, t: ndarray, id: object = None):
         “Rapid Determination of Satellite Visibility Periods,” Journal of
         Astronautical Sciences, Vol. 40, No. 2, 1992
     Args:
-        v (``ndarray``): [1 x N] array of floats
-        t (``ndarray``): [1 x N] array of floats
-        id (``any``): (Optional) Identifier for interval tree
+        v (`ndarray`): [1 x N] array of floats
+        t (`ndarray`): [1 x N] array of floats
+        id (`any`): (Optional) Identifier for interval tree
 
     Returns:
-        crossings (``ndarray``): [1 x M] array of times at which the
+        crossings (`ndarray`): [1 x M] array of times at which the
             visibility function crosses 0
-        riseSet (``ndarray``): [1 x M] array of +-1 indicating if associated
+        riseSet (`ndarray`): [1 x M] array of +-1 indicating if associated
             value in crossings is a rise point (+1) or set point (-1)
-        tree (``IntervalTree``): Interval tree object of time bounds during
+        tree (`IntervalTree`): Interval tree object of time bounds during
             which visibility function is >1
 
     Note that the ability to detect rise/set times within the first 2 steps
@@ -193,12 +192,12 @@ def findCrossing(t: ndarray, v: ndarray, order) -> ndarray:
     """Fits a 3rd order polynomial to 4 points and finds root.
 
     Args:
-        t (ndarray): [4,] Time values.
-        v (ndarray): [4,] Visibility function values.
-        order (int): Order of polyfit.
+        t (`ndarray`): [4,] Time values.
+        v (`ndarray`): [4,] Visibility function values.
+        order (`int`): Order of polyfit.
 
     Returns:
-        ndarray: [1, ] Time of zero-crossing.
+        `ndarray`: [1, ] Time of zero-crossing.
     """
     # fit a 3rd-order polynomial
     poly = Polynomial.fit(t, v, order)
@@ -219,10 +218,10 @@ def riseOrSet(v_i: float) -> int:
     """Switch case for visibility value.
 
     Args:
-        v_i (float): Value of visibility function
+        v_i (`float`): Value of visibility function
 
     Returns:
-        int: 1, -1, or 0 for rise , set, or anomaly, respectively.
+        `int`: 1, -1, or 0 for rise , set, or anomaly, respectively.
     """
     if sign(v_i) == 1:
         # rise time
@@ -240,13 +239,13 @@ def isVis(r1: ndarray, r2: ndarray, RE: float, hg: float = 0) -> bool:
     """Shortcut wrapper to for boolean visibility.
 
     Args:
-        r1 (ndarray): _description_
-        r2 (ndarray): _description_
-        RE (float): _description_
-        hg (float): _description_
+        r1 (`ndarray`): [3 X 1] ECI position vector of object 1
+        r2 (`ndarray`): [3 X 1] ECI position vector of object 2
+        RE (`float`): Radius of planet
+        hg (`float`): extra height restriction above planet surface
 
     Returns:
-        bool: True if ``r1`` and ``r2`` are visible to each other.
+        `bool`: True if `r1` and `r2` are visible to each other.
     """
     v, _, _, _ = visibilityFunc(r1, r2, RE, hg)
 

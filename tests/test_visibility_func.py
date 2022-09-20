@@ -1,4 +1,4 @@
-"""Tests for visibility_func module"""
+"""Tests for `visibility_func.py`."""
 # %% Imports
 from __future__ import annotations
 
