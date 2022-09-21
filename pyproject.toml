@@ -3,10 +3,19 @@ name = "sat_vis"
 version = "0.0.1"
 description = "Satellite LOS visibility calculator"
 readme = "README.md"
+license = { file="LICENSE" }
 requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Private :: Do Not Upload",
+]
 authors = [
     {name = "Dylan Penn", email = "dylanrpenn@vt.edu"}
 ]
+
+
 
 dependencies = [
     "matplotlib>=3.5",
@@ -28,6 +37,9 @@ dev = [
     "black>=22.3.0",
     "isort[colors]",
 ]
+
+[project.urls]
+"GitHub" = "https://github.com/dylan906/SatVis"
 
 [build-system]
 
