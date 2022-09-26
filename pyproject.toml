@@ -13,9 +13,6 @@ classifiers = [
 authors = [
     {name = "Dylan Penn", email = "dylanrpenn@vt.edu"}
 ]
-
-
-
 dependencies = [
     "matplotlib>=3.5",
     "intervaltree>=3.1",
@@ -39,21 +36,19 @@ dev = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/dylan906/SatVis"
+"Homepage" = "https://github.com/dylan906/sat-vis"
 
 [build-system]
-
 requires = [
     "setuptools>=64",
     "wheel>=0.29.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = [
-    "sat-vis",
-]
+# packages = [
+#     "sat-vis",
+# ]
 zip-safe = false
-
 
 [tool.isort]
 # Play nicely with black
@@ -71,5 +66,5 @@ known_first_party = [
 # Import headers
 import_heading_stdlib = "Standard Library Imports"
 import_heading_thirdparty = "Third Party Imports"
-import_heading_firstparty = "Sat Vis Imports"
+import_heading_firstparty = "Sat-Vis Imports"
 import_heading_localfolder = "Local Imports"
