@@ -1,16 +1,16 @@
-# **SatVis**: A satellite visibility calculator.
+# **sat-vis**: A satellite visibility calculator.
 ## Description
-SatVis is a small library of functions used to calculate line-of-sight (LOS) visibility between spacecraft assuming a spherical Earth. The functions within the library are implementations of algorithms developed by J. A. Lawton and Salvatore Alfano et. al. Visibility windows are represented as `IntervalTree`s.
+*sat-vis* is a small library of functions used to calculate line-of-sight (LOS) visibility between spacecraft and plot access windows. The core functions that the library is based on are implementations of algorithms developed by J. A. Lawton and Salvatore Alfano et. al. Visibility windows are represented as `IntervalTree`s. Access windows are plotted using matplotlib.
 
 ## Examples
 ### Example 1
 
-To calculate the visibility between two Earth-centerd-inertial (ECI) points:
+To calculate the visibility between two Earth-centered-inertial (ECI) points:
 ```python
 earth_radius = 6378 # km
 extra_height = 0 # km
-r1 = array([[RE + 400, 1, 0]]).transpose() # position of object 1
-r2 = array([[RE, 0, 0]]).transpose() # position of object 2
+r1 = array([[earth_radius + 400, 0, 0]]).transpose() # position of object 1
+r2 = array([[earth_radius, 0, 0]]).transpose() # position of object 2
 
 [vis, phi, a1, a2] = visibilityFunc(r1, r2, earth_radius, extra_height)
 print(vis)

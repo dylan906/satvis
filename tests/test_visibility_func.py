@@ -12,7 +12,7 @@ from sat_vis.visibility_func import visibilityFunc, zeroCrossingFit
 # %% Test visibilityFunc
 RE = 6378
 hg = 0
-r1 = array([[RE + 400, 1, 0]]).transpose()
+r1 = array([[RE + 400, 0, 0]]).transpose()
 r2 = array([[RE, 0, 0]]).transpose()
 
 [v, phi, a1, a2] = visibilityFunc(r1, r2, RE, hg)
