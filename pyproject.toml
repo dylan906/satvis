@@ -1,6 +1,6 @@
 [project]
-name = "sat_vis"
-version = "0.0.1"
+name = "sat-vis"
+version = "0.0.2"
 description = "Satellite LOS visibility calculator"
 readme = "README.md"
 license = { file="LICENSE" }
@@ -39,7 +39,7 @@ dev = [
 ]
 
 [project.urls]
-"GitHub" = "https://github.com/dylan906/SatVis"
+"Homepage" = "https://github.com/dylan906/SatVis"
 
 [build-system]
 
@@ -50,7 +50,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = [
-    "sat_vis",
+    "sat-vis",
 ]
 zip-safe = false
 
@@ -66,7 +66,7 @@ line_length = 79
 line_ending = "\n"
 # Whitelist first party imports
 known_first_party = [
-    "sat_vis",
+    "sat-vis",
 ]
 # Import headers
 import_heading_stdlib = "Standard Library Imports"
