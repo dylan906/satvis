@@ -39,6 +39,12 @@ def getVisHist(
             representing all intervals for which target-sensor pairs
             can see each other. If no target-sensor pairs can see each
             other during the input time window, the `IntervalTree` is empty.
+            The data field of each entry (`rise_set_tree[#].data`) is a dict
+            with the following keys:
+                {
+                    "target_id": target_id,
+                    "sensor_id": sensor_id
+                }
         vis (`ndarray`): [M x N x T] array of visibility function values for
             all target-sensor pairs for all time.
 
@@ -94,7 +100,7 @@ def getPairName(target: dict, sensor: dict) -> dict:
         sensor (`dict`): Sensor object
 
     Returns:
-        pair_name (`dict`): {'target_id': sat_id, 'sensor_id': sensor_id}
+        pair_name (`dict`): {'target_id': target_id, 'sensor_id': sensor_id}
     """
     target_id = target["id"]
     sensor_id = sensor["id"]
