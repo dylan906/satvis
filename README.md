@@ -2,6 +2,11 @@
 ## Description
 *sat-vis* is a small library of functions used to calculate line-of-sight (LOS) visibility between spacecraft and plot access windows. The core functions that the library is based on are implementations of algorithms developed by J. A. Lawton and Salvatore Alfano et. al. Visibility windows are represented as `IntervalTree`s. Access windows are plotted using matplotlib.
 
+## Install
+```
+pip install sat-vis
+```
+
 ## Examples
 ### Example 1
 
