@@ -1,11 +1,14 @@
 """Visibility history module."""
 # %% Imports
+from __future__ import annotations
+
 # Third Party Imports
 from intervaltree import IntervalTree
 from numpy import ndarray, zeros
 
+# satvis Imports
 # Sat Vis Imports
-from sat_vis.visibility_func import visibilityFunc, zeroCrossingFit
+from satvis.visibility_func import visibilityFunc, zeroCrossingFit
 
 
 # %% getVisibility
@@ -17,7 +20,6 @@ def getVisHist(
     time: list,
     planet_radius: float,
 ) -> tuple[IntervalTree, ndarray]:
-    # TODO: Move to SatVis repo
     """Generate visibility function history between sensors and targets.
 
     Args:

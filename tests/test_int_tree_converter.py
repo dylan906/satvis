@@ -7,9 +7,10 @@ import matplotlib.pyplot as plt
 from intervaltree import Interval, IntervalTree
 from numpy import shape
 
+# Sat-Vis Imports
 # Sat Vis Imports
-from sat_vis.int_tree_converter import intTree2WindowList
-from sat_vis.schedule_plots import plotSchedule
+from satvis.int_tree_converter import intTree2WindowList
+from satvis.schedule_plots import plotSchedule
 
 # %% Create ScheduleTree()
 ivs1 = [(1, 2), (4, 7), (8, 9)]

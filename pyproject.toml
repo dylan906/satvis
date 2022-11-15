@@ -1,12 +1,12 @@
 [project]
-name = "sat-vis"
-version = "0.0.4"
+name = "satvis"
+version = "0.1.0"
 description = "Satellite LOS visibility calculator"
 readme = "README.md"
 license = { file="LICENSE" }
 requires-python = ">=2.8.5"
 classifiers = [
-    "Programming Language :: Python",
+    "Programming Language :: Python :: 2",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
@@ -44,11 +44,11 @@ requires = [
     "wheel>=0.29.0"]
 build-backend = "setuptools.build_meta"
 
-# [tool.setuptools]
-# packages = [
-#     "sat-vis",
-# ]
-# zip-safe = false
+[tool.setuptools]
+packages = [
+    "satvis", # folder all the modules are in
+]
+zip-safe = false
 
 [tool.isort]
 # Play nicely with black
@@ -61,10 +61,10 @@ line_length = 79
 line_ending = "\n"
 # Whitelist first party imports
 known_first_party = [
-    "sat-vis",
+    "satvis",
 ]
 # Import headers
 import_heading_stdlib = "Standard Library Imports"
 import_heading_thirdparty = "Third Party Imports"
-import_heading_firstparty = "Sat-Vis Imports"
+import_heading_firstparty = "satvis Imports"
 import_heading_localfolder = "Local Imports"

@@ -1,5 +1,7 @@
 """Schedule plots module."""
 # %% Imports
+from __future__ import annotations
+
 # Standard Library Imports
 import warnings
 

@@ -5,8 +5,9 @@ from __future__ import annotations
 # Third Party Imports
 from matplotlib import pyplot as plt
 
+# Sat-Vis Imports
 # Sat Vis Imports
-from sat_vis.schedule_plots import padSchedList, plotSchedule
+from satvis.schedule_plots import padSchedList, plotSchedule
 
 # %% Build data
 # building block sets

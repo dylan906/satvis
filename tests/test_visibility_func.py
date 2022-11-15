@@ -6,8 +6,9 @@ from __future__ import annotations
 from matplotlib import pyplot as plt
 from numpy import array, linspace, sin, zeros
 
+# Sat-Vis Imports
 # Sat Vis Imports
-from sat_vis.visibility_func import visibilityFunc, zeroCrossingFit
+from satvis.visibility_func import visibilityFunc, zeroCrossingFit
 
 # %% Test visibilityFunc
 RE = 6378

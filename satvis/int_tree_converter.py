@@ -5,6 +5,8 @@ plotSchedule for schedule availability plots.
 """
 
 # %% Imports
+from __future__ import annotations
+
 # Standard Library Imports
 from typing import Tuple
 
