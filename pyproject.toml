@@ -16,7 +16,7 @@ authors = [
 dependencies = [
     "matplotlib>=3.5",
     "intervaltree>=3.1",
-    "numpy>=1.23",
+    "numpy",
     "intervaltree>=3.1",
 ]
 
