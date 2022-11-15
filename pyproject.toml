@@ -1,12 +1,12 @@
 [project]
 name = "sat-vis"
-version = "0.0.3"
+version = "0.0.4"
 description = "Satellite LOS visibility calculator"
 readme = "README.md"
 license = { file="LICENSE" }
-requires-python = ">=3"
+requires-python = ">=2.8.5"
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Programming Language :: Python",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
