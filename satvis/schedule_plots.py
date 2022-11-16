@@ -39,10 +39,10 @@ def plotSchedule(
             to `None`.
         scheduled_targ_labels (`list[str]`): (Optional) Q-long list of
             strings of target names. Must be a subset of entries in
-            `target_labels`. Q must be less than N.
+            `target_labels`. Q >= N.
         scheduled_sensor_labels (`list[str]`): (Optional) P-long list of
             strings of sensor names. Must be a subset of entries in
-            `sensor_labels`. P must be less than M.
+            `sensor_labels`. P >= M.
 
     Returns:
         `Figure`: Schedule availability plot as a `broken_barh` plot
@@ -249,7 +249,9 @@ def genPlot(
                     alpha=al,
                 )
             elif (
-                (flag == "thin") and (sens in sched_sensor_labels) and (targ in sched_targ_labels)
+                (flag == "thin")
+                and (sens in sched_sensor_labels)
+                and (targ in sched_targ_labels)
             ):
                 plt.broken_barh(
                     dat[j][i],
