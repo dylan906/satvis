@@ -312,8 +312,8 @@ avail = [
             [[], [(2, 3)]]  #  access windows for Sensor B
         ]
 sched = [
-            [[(2, 0.5)], []],  # access windows for Sensor A
-            [[], [(3, 1)]], #  access windows for Sensor B
+            [[(2, 0.5)], []],  # schedule for Sensor A
+            [[], [(3, 1)]], #  schedule for Sensor B
         ]  
 target_labels = ['1', '2']
 sensor_labels = ['A', 'B']
@@ -328,6 +328,9 @@ f = plotSchedule(
     )
 plt.show()
 ```
+
+The above code outputs this figure:
+![](pics/plot_scheduled.png)
 
 ## Citations:
 - Alfano, Salvatore & Jr, Negron, & Moore, Jennifer. (1992). Rapid Determination of Satellite Visibility Periods. Journal of The Astronautical Sciences. Vol. 40, April-June, pp 281-296. 
