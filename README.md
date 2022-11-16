@@ -225,9 +225,15 @@ print(f"vis = {vis})
 #   [ 1.41076435  1.6559796   1.83313801  1.96935546]]]
 ```
 
+Before we examine the outputs, note the format of sensor/target id.
+Note that the value of "id" can be any format; here we are using `str`s and `int`s, but you can use anything.
+
+Now onto the outputs.
 First let's look at `tree`:
 - Target `3`/sensor `B`, target `1`/sensor `A`, and target `2`/sensor `B` can see each other from 0-3.
 - There are no `Interval`s in the `IntervalTree` for target `1`/sensor `B`, target `2`/sensor `A`, or target `3`/sensor `A`; none of these target/sensor pairs can see each other over `time`.
+- Note that the order of `Interval`s in `tree` are not time-ordered; this is because `IntervalTree`s do *not* preserve order.
+- The order of arrays in `vis` corresponds to the order of inputs in `targets` and `sensors`.
 
 Now we examine `vis`:
 - The output `vis` array is (M, N, T), where M is the number of sensors, N is the number of targets, and T is the length of the time array.
@@ -236,6 +242,92 @@ This corresponds to target `1`/sensor `A` being visible to each other.
 - Conversely, all of the entries in row 1 of the upper block (-1.73, -1.48, ...) are negative.
 This corresponds to target `2`/sensor `A` ***not*** being visible to each other.
 - The lower array block corresponds to sensor `B`.
+
+## Schedule Plots Examples
+Access windows between sensors and targets can be plotted using `plotSchedule`.
+Import the functions used in the following examples with:
+
+```python
+# local imports
+from schedule_plots import plotSchedule
+from int_tree_converter import intTree2WindowList
+
+# 3rd-party imports
+from intervaltree import Interval, IntervalTree
+```
+
+### Example 1
+`plotSchedule` requires a specifically-formatted `ndarray` that is not easily human-readable.
+To convert from the easyish-to-read output of `getVisHist` to something that `plotSchedule` can interpret, we use the converter function `intTree2WindowList`. 
+
+```python
+# Build a simple IntervalTree
+tree = IntervalTree([Interval(0, 3, {'target_id': 3, 'sensor_id': 'B'}), Interval(0, 3, {'target_id': 1, 'sensor_id': 'A'}), Interval(0, 3, {'target_id': 2, 'sensor_id': 'B'})])
+
+# Convert IntervalTree
+[windows, sensor_ids, target_ids] = intTree2WindowList(schedule_tree=tree)
+print(windows)
+print(sensor_ids)
+print(target_ids)
+# Prints:
+# [[[(0, 3)], [], []], [[], [(0, 3)], [(0, 3)]]]
+# ['A', 'B']
+# [1, 2, 3]
+```
+
+The sensor and target ids are used for debugging, and generally ignored when using `intTree2WindowList`.
+`windows` is formatted such that `plotSchedule` can accept it as an argument.
+
+### Example 2: Basic Plot
+Now to generate a schedule plot. 
+Before calling `plotSchedule`, create a *matplotlib* figure, which is passed in as an argument.
+
+```python
+f = plt.figure()
+avail = [
+            [[(2, 1)], [(4, 1)]],  # access windows for Sensor A
+            [[], [(2, 3)]]  #  access windows for Sensor B
+        ]
+target_labels = ['1', '2']
+sensor_labels = ['A', 'B']
+f = plotSchedule(
+    availability=avail,
+    target_labels=target_labels,
+    sensor_labels=sensor_labels,
+    fig=f
+    )
+plt.show()
+```
+
+The above code outputs this figure:
+![](pics/plot_basic.png)
+
+### Example 3: Scheduled Plot
+There are optional arguments to `plotSchedule` that show a "scheduled" sensor-target pairs as well as availability.
+
+```python
+f = plt.figure()
+avail = [
+            [[(2, 1)], [(4, 1)]],  # access windows for Sensor A
+            [[], [(2, 3)]]  #  access windows for Sensor B
+        ]
+sched = [
+            [[(2, 0.5)], []],  # access windows for Sensor A
+            [[], [(3, 1)]], #  access windows for Sensor B
+        ]  
+target_labels = ['1', '2']
+sensor_labels = ['A', 'B']
+f = plotSchedule(
+    availability=avail,
+    target_labels=target_labels,
+    sensor_labels=sensor_labels,
+    fig=f,
+    scheduled=sched,
+    scheduled_targ_labels=target_labels,
+    scheduled_sensor_labels=sensor_labels,
+    )
+plt.show()
+```
 
 ## Citations:
 - Alfano, Salvatore & Jr, Negron, & Moore, Jennifer. (1992). Rapid Determination of Satellite Visibility Periods. Journal of The Astronautical Sciences. Vol. 40, April-June, pp 281-296. 
