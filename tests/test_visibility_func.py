@@ -12,7 +12,7 @@ from numpy import array, linspace, sin, zeros
 from satvis.visibility_func import visibilityFunc, zeroCrossingFit
 
 # %% Test visibilityFunc
-print(f"\n visibilityFunc simple tests...")
+print("\n visibilityFunc simple tests...")
 RE = 6378
 hg = 0
 r1 = array([[RE + 400, 0, 0]]).transpose()
@@ -29,7 +29,7 @@ r2 = array([[2000, 0, 0]]).transpose()
 [v, phi, a1, a2] = visibilityFunc(r1, r2, 1000, 0)
 print(v)
 # %% Warning tests
-print(f"\n visibilityFunc warning tests...")
+print("\n visibilityFunc warning tests...")
 # Check for object being slightly below surface of Earth-- numerically assume
 # object is on surface.
 r1_alt = array([6378.136299999999, 0, 0])
