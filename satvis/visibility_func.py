@@ -87,6 +87,15 @@ def visibilityFunc(
 
     phi = arccos(test_var)
     # print(np.dot(r1, r2)/(r1_mag * r2_mag))
+
+    # Correct alphas if they are outside doman of arccos
+    if isnan(alpha1):
+        alpha1 = 0
+        warn("alpha1 changed from NaN to 0")
+    if isnan(alpha2):
+        alpha2 = 0
+        warn("alpha2 changed from NaN to 0")
+
     v = alpha1 + alpha2 - phi
 
     # the checks for r_mag and test_var should ensure that v is a real number,
