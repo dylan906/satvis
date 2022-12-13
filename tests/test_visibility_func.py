@@ -6,6 +6,7 @@ from __future__ import annotations
 from matplotlib import pyplot as plt
 from numpy import array, linspace, sin, zeros
 
+# satvis Imports
 # Sat-Vis Imports
 # Sat Vis Imports
 from satvis.visibility_func import visibilityFunc, zeroCrossingFit
@@ -55,7 +56,7 @@ t = array([0, 1, 2, 3, 4])
 # no visibility window
 vis1 = array([-1, -0.9, -0.8, -0.01, -0.1])
 [crossings, riseSet, visTree] = zeroCrossingFit(vis1, t, "der")
-print("\nNo vis windows")
+print("\n No vis windows")
 print(f"crossings={crossings} \nriseSet={riseSet}")
 print(f"tree={visTree}")
 
@@ -68,7 +69,7 @@ ax.set_title("No visibility windows")
 # visible for whole series
 vis2 = -1 * vis1
 [crossings, riseSet, visTree] = zeroCrossingFit(vis2, t, "der")
-print("\nvisibile for whole series")
+print("\n visibile for whole series")
 print(f"crossings={crossings} \nriseSet={riseSet}")
 print(f"tree={visTree}")
 
@@ -81,7 +82,7 @@ ax.set_title("visible for whole series")
 # 0-crossing, ends visible
 vis3 = array([-1, -0.1, 0.5, 4, 2])
 [crossings, riseSet, visTree] = zeroCrossingFit(vis3, t, "der")
-print("\nends visible")
+print("\n ends visible")
 print(f"crossings={crossings} \nriseSet={riseSet}")
 print(f"tree={visTree}")
 
@@ -95,7 +96,7 @@ ax.set_title("w/ 0-crossings, ends visible")
 # 0-crossing, ends not visible
 vis4 = array([1, 0.1, -0.5, -4, -2])
 [crossings, riseSet, visTree] = zeroCrossingFit(vis4, t, "der")
-print("\nends not visible")
+print("\n ends not visible")
 print(f"crossings={crossings} \nriseSet={riseSet}")
 print(f"tree={visTree}")
 
@@ -137,7 +138,7 @@ ax.set_title("starts stradling 0 (+----)")
 # starts stradling 0 (--+++)
 vis_a = array([-1, -0.2, 0.5, 4, 2])
 [crossings, riseSet, visTree] = zeroCrossingFit(vis_a, t, "der")
-print("\nstraddle, start negative (--+++)")
+print("\n straddle, start negative (--+++)")
 print(f"crossings={crossings} \nriseSet={riseSet}")
 print(f"tree={visTree}")
 
@@ -181,7 +182,11 @@ ax.set_title("multiple crossings, ends visible")
 # %%
 # Check IntervalTree
 vis7 = array([-1, -3, -4, -5, -6])
-[crossings3, riseSet3, visTree3] = zeroCrossingFit(vis7, linspace(0, 5, num=5), "hey")
+[crossings3, riseSet3, visTree3] = zeroCrossingFit(
+    vis7,
+    linspace(0, 5, num=5),
+    "hey",
+)
 print(visTree3)
 
 # %% README Example
