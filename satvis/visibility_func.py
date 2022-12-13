@@ -4,6 +4,7 @@ from __future__ import annotations
 
 # Standard Library Imports
 from typing import Tuple
+from warnings import warn
 
 # Third Party Imports
 from intervaltree import Interval, IntervalTree
@@ -28,7 +29,8 @@ def visibilityFunc(
         hg (`float`): extra height restriction above planet surface
 
     Returns:
-        v (`float`): value of visibility function (positive indicates objects can see each other)
+        v (`float`): value of visibility function (positive indicates objects
+            can see each other)
         phi (`float`): angle between position vectors
         alpha1 (`float`): construction angle 1
         alpha2 (`float`): construction angle 2
@@ -46,12 +48,18 @@ def visibilityFunc(
 
     # check if points are far below surface of Earth
     if RE_prime / r1_mag > (1 + eps):
-        print(f"RE_prime/r1_mag={RE_prime/r1_mag}, (RE_prime={RE_prime}, r1_mag={r1_mag})")
-        raise ValueError("RE_prime > r1_mag")
+        print(
+            f"RE_prime/r1_mag={RE_prime/r1_mag}, (RE_prime={RE_prime}, r1_mag={r1_mag})"
+        )
+        # raise ValueError("RE_prime > r1_mag")
+        warn("RE_prime > r1_mag")
 
     if RE_prime / r2_mag > (1 + eps):
-        print(f"RE_prime/r2_mag={RE_prime/r2_mag}, (RE_prime={RE_prime}, r2_mag={r2_mag})")
-        raise ValueError("RE_prime > r2_mag")
+        print(
+            f"RE_prime/r2_mag={RE_prime/r2_mag}, (RE_prime={RE_prime}, r2_mag={r2_mag})"
+        )
+        # raise ValueError("RE_prime > r2_mag")
+        warn("RE_prime > r2_mag")
 
     # if points are slightly below Earth surface, change to be on surface.
     if (RE_prime / r1_mag > 1) and (RE_prime / r1_mag < 1 + eps):
@@ -87,7 +95,7 @@ def visibilityFunc(
         print(f"alpha1={alpha1}, alpha2={alpha2}, phi={phi}")
         print(f"r1={r1}, r2={r2}")
         print(f"r1_mag={r1_mag}, r2_mag={r2_mag}")
-        raise TypeError("v is NaN")
+        raise TypeError("Error: v is NaN")
 
     return v, phi, alpha1, alpha2
 
