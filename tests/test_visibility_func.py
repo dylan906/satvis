@@ -12,6 +12,7 @@ from numpy import array, linspace, sin, zeros
 from satvis.visibility_func import visibilityFunc, zeroCrossingFit
 
 # %% Test visibilityFunc
+print(f"\n visibilityFunc simple tests...")
 RE = 6378
 hg = 0
 r1 = array([[RE + 400, 0, 0]]).transpose()
@@ -27,20 +28,30 @@ r1 = array([[1000, 0, 0]]).transpose()
 r2 = array([[2000, 0, 0]]).transpose()
 [v, phi, a1, a2] = visibilityFunc(r1, r2, 1000, 0)
 print(v)
-
-# these inputs found to have errors previously, so run check to ensure bug was
-# fixed.
-r1 = array([[8800, 8800, 8800]]).transpose()
-r2 = array([[-8000, -8000, -8000]]).transpose()
-visibilityFunc(r1, r2, 6378, 0)
-
+# %% Warning tests
+print(f"\n visibilityFunc warning tests...")
 # Check for object being slightly below surface of Earth-- numerically assume
 # object is on surface.
 r1_alt = array([6378.136299999999, 0, 0])
 r2_alt = array([0, 6378.136299999999, 0])
 visibilityFunc(r1_alt, r2_alt, 6378.1363, 0)
 
-# %% Point Test
+# Input object below surface of Earth, should display a warning
+r1_alt = array([RE - 0.1, 0, 0])
+r2_alt = array([0, RE - 0.1, 0])
+try:
+    visibilityFunc(r1_alt, r2_alt, RE, 0)
+except TypeError as err:
+    print(err)
+
+# %% Specific bug point tests
+print("\n Point tests...")
+# these inputs found to have errors previously, so run check to ensure bug was
+# fixed.
+r1 = array([[8800, 8800, 8800]]).transpose()
+r2 = array([[-8000, -8000, -8000]]).transpose()
+visibilityFunc(r1, r2, 6378, 0)
+
 r1 = array([[41569.73845258, 6711.91401374, 0]]).transpose()
 r2 = array([[41569.73845258, 6711.91401374, 0]]).transpose()
 
@@ -190,6 +201,7 @@ vis7 = array([-1, -3, -4, -5, -6])
 print(visTree3)
 
 # %% README Example
+print("\n Readme example...")
 t = array([0, 1, 2, 3, 4])  # time vector
 vis1 = array([-1, -0.1, 0.5, 4, 2])
 vis2 = array([-2, -1, -0.5, 1, 1.1])
