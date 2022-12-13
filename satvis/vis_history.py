@@ -23,10 +23,10 @@ def getVisHist(
     """Generate visibility function history between sensors and targets.
 
     Args:
-        targets (`list[dict]`): N-length list of dicts. Each dict must include an
-            'id' field.
-        sensors (`list[dict]`): M-length list of dicts. Each dict must include an
-            'id' field.
+        targets (`list[dict]`): N-length list of dicts. Each dict must include
+            an 'id' field.
+        sensors (`list[dict]`): M-length list of dicts. Each dict must include
+            an 'id' field.
         x_targets (`ndarray`): [T x 6 x N] State history of targets. The 1st-
             dimension of the array is the [6x1] ECI state vector [position,
             velocity] in km and km/s, respectively.
@@ -83,7 +83,11 @@ def getVisHist(
                     hg=0,
                 )
 
-            _, _, new_tree = zeroCrossingFit(vis[i_sensor, i_sat], time, pair_name)
+            _, _, new_tree = zeroCrossingFit(
+                vis[i_sensor, i_sat],
+                time,
+                pair_name,
+            )
 
             # extend list of Intervals (note Intervals are not same as
             # IntervalTree)
