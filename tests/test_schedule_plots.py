@@ -60,14 +60,26 @@ f = plotSchedule(dat_big, target_labels, sensor_labels, f)
 print("Empty tasked input")
 f = plt.figure()
 f = plotSchedule(
-    dat_big, target_labels, sensor_labels, f, dat_empty, target_labels, sensor_labels
+    dat_big,
+    target_labels,
+    sensor_labels,
+    f,
+    dat_empty,
+    target_labels,
+    sensor_labels,
 )
 
 # with populated tasked input
 print("populated tasked input")
 f = plt.figure()
 f = plotSchedule(
-    dat_big, target_labels, sensor_labels, f, dat_big2, target_labels, sensor_labels
+    dat_big,
+    target_labels,
+    sensor_labels,
+    f,
+    dat_big2,
+    target_labels,
+    sensor_labels,
 )
 
 # with empty availability
