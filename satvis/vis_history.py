@@ -7,7 +7,6 @@ from intervaltree import IntervalTree
 from numpy import ndarray, zeros
 
 # satvis Imports
-# Sat Vis Imports
 from satvis.visibility_func import visibilityFunc, zeroCrossingFit
 
 

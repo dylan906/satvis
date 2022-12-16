@@ -3,7 +3,7 @@
 # Third Party Imports
 from numpy import array, zeros
 
-# Sat-Vis Imports
+# satvis Imports
 from satvis.vis_history import getVisHist
 
 # %% Test getVisHist

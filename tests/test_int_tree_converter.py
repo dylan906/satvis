@@ -7,19 +7,20 @@ import matplotlib.pyplot as plt
 from intervaltree import Interval, IntervalTree
 from numpy import shape
 
-# Sat-Vis Imports
-# Sat Vis Imports
+# satvis Imports
 from satvis.int_tree_converter import intTree2WindowList
 from satvis.schedule_plots import plotSchedule
 
 # %% Create ScheduleTree()
 ivs1 = [(1, 2), (4, 7), (8, 9)]
 tree1 = IntervalTree(
-    Interval(begin, end, {"target_id": "Sat 1", "sensor_id": "Sens A"}) for begin, end in ivs1
+    Interval(begin, end, {"target_id": "Sat 1", "sensor_id": "Sens A"})
+    for begin, end in ivs1
 )
 ivs2 = [(4, 6), (8, 11)]
 tree2 = IntervalTree(
-    Interval(begin, end, {"target_id": "Sat 1", "sensor_id": "Sens B"}) for begin, end in ivs2
+    Interval(begin, end, {"target_id": "Sat 1", "sensor_id": "Sens B"})
+    for begin, end in ivs2
 )
 tree_merged = tree1 | tree2
 

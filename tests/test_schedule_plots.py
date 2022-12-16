@@ -5,8 +5,7 @@ from __future__ import annotations
 # Third Party Imports
 from matplotlib import pyplot as plt
 
-# Sat-Vis Imports
-# Sat Vis Imports
+# satvis Imports
 from satvis.schedule_plots import padSchedList, plotSchedule
 
 # %% Build data
@@ -60,12 +59,16 @@ f = plotSchedule(dat_big, target_labels, sensor_labels, f)
 # with empty tasked input
 print("Empty tasked input")
 f = plt.figure()
-f = plotSchedule(dat_big, target_labels, sensor_labels, f, dat_empty, target_labels, sensor_labels)
+f = plotSchedule(
+    dat_big, target_labels, sensor_labels, f, dat_empty, target_labels, sensor_labels
+)
 
 # with populated tasked input
 print("populated tasked input")
 f = plt.figure()
-f = plotSchedule(dat_big, target_labels, sensor_labels, f, dat_big2, target_labels, sensor_labels)
+f = plotSchedule(
+    dat_big, target_labels, sensor_labels, f, dat_big2, target_labels, sensor_labels
+)
 
 # with empty availability
 print("empty availability")
@@ -138,7 +141,13 @@ set_partial = [[dat1], [dat3]]
 
 f = plt.figure()
 f = plotSchedule(
-    set_tot, ["sat1", "sat2"], ["sensA", "sensB"], f, set_partial, ["sat1"], ["sensA", "sensB"]
+    set_tot,
+    ["sat1", "sat2"],
+    ["sensA", "sensB"],
+    f,
+    set_partial,
+    ["sat1"],
+    ["sensA", "sensB"],
 )
 
 
