@@ -7,8 +7,6 @@ from matplotlib import pyplot as plt
 from numpy import array, linspace, sin, zeros
 
 # satvis Imports
-# Sat-Vis Imports
-# Sat Vis Imports
 from satvis.visibility_func import visibilityFunc, zeroCrossingFit
 
 # %% Test visibilityFunc
@@ -38,11 +36,14 @@ visibilityFunc(r1_alt, r2_alt, 6378.1363, 0)
 
 # Input object below surface of Earth, should display a warning
 r1_alt = array([RE - 0.1, 0, 0])
+r2_alt = array([0, RE, 0])
+[v, phi, a1, a2] = visibilityFunc(r1_alt, r2_alt, RE, 0)
+print(f"v = {v}, phi={phi}, alpha1={a1}, alpha2={a2}")
+
+r1_alt = array([RE, 0, 0])
 r2_alt = array([0, RE - 0.1, 0])
-try:
-    visibilityFunc(r1_alt, r2_alt, RE, 0)
-except TypeError as err:
-    print(err)
+[v, phi, a1, a2] = visibilityFunc(r1_alt, r2_alt, RE, 0)
+print(f"v = {v}, phi={phi}, alpha1={a1}, alpha2={a2}")
 
 # %% Specific bug point tests
 print("\n Point tests...")
@@ -59,7 +60,7 @@ v, phi, alpha1, alpha2 = visibilityFunc(r1, r2, 6371, 0)
 
 print(v)
 # %% Test zeroCrossingFit
-print("Small tests\n")
+print("Test zeroCrossingFit...\n")
 plt.style.use("default")
 
 # test special cases

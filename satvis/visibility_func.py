@@ -1,4 +1,4 @@
-"""Functions that calculate LOS visibility between two points near a spherical body."""
+"""Calculate visibility between two points near a spherical body."""
 # %% Imports
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from warnings import warn
 
 # Third Party Imports
 from intervaltree import Interval, IntervalTree
-from numpy import append, arange, arccos, array, dot, isnan, isreal, ndarray, sign
+from numpy import append, arange, arccos, array, dot, isnan, isreal, nan, ndarray, sign
 from numpy.linalg import norm
 from numpy.polynomial import Polynomial
 
@@ -30,48 +30,39 @@ def visibilityFunc(
 
     Returns:
         v (`float`): value of visibility function (positive indicates objects
-            can see each other)
+            can see each other). Returns -1 if either r1 or r1 are below surface
+            of planet.
         phi (`float`): angle between position vectors
-        alpha1 (`float`): construction angle 1
-        alpha2 (`float`): construction angle 2
+        alpha1 (`float`): Construction angle 1. Returns numpy.nan if either r1
+            or r2 are below surface of planet.
+        alpha2 (`float`): Construction angle 2. Returns numpy.nan if either r1
+            or r2 are below surface of planet.
 
     From "Numerical Method for Rapidly Determining Satellite-Satellite
         and Satellite-Ground Station In-View Periods", by Lawton, 1987.
         All argument units are arbitrary distances, just keep consistent.
     """
+    # %% Params
     # small value for error threshold
     eps = 1e-13
 
+    # get magnitude of position vectors and radius of body
     RE_prime = RE + hg
     r1_mag = norm(r1)
     r2_mag = norm(r2)
 
-    # check if points are far below surface of Earth
-    if RE_prime / r1_mag > (1 + eps):
-        print(
-            f"RE_prime/r1_mag={RE_prime/r1_mag}, (RE_prime={RE_prime}, r1_mag={r1_mag})"
-        )
-        # raise ValueError("RE_prime > r1_mag")
-        warn("RE_prime > r1_mag")
-
-    if RE_prime / r2_mag > (1 + eps):
-        print(
-            f"RE_prime/r2_mag={RE_prime/r2_mag}, (RE_prime={RE_prime}, r2_mag={r2_mag})"
-        )
-        # raise ValueError("RE_prime > r2_mag")
-        warn("RE_prime > r2_mag")
-
+    # %% Correct magnitudes if needed.
     # if points are slightly below Earth surface, change to be on surface.
     if (RE_prime / r1_mag > 1) and (RE_prime / r1_mag < 1 + eps):
+        warn("r1_mag nudged to equal RE_prime")
         r1_mag = RE_prime
 
     if (RE_prime / r2_mag > 1) and (RE_prime / r2_mag < 1 + eps):
+        warn("r2_mag nudged to equal RE_prime")
         r2_mag = RE_prime
 
-    alpha1 = arccos(RE_prime / r1_mag)
-    alpha2 = arccos(RE_prime / r2_mag)
-
-    # check if numerics cause test_var to be >1, and correct if needed
+    # %% Calculate angle between position vectors
+    # Check if numerics cause test_var to be >1, and correct if needed
     # Corrects for issues when vectors are close to each other
     test_var = dot(r1.squeeze(), r2.squeeze()) / (r1_mag * r2_mag)
     if test_var > (1 + eps):
@@ -85,26 +76,50 @@ def visibilityFunc(
     elif test_var < -1 and test_var > (-1 - eps):
         test_var = -1
 
+    # angle between vectors
     phi = arccos(test_var)
-    # print(np.dot(r1, r2)/(r1_mag * r2_mag))
 
-    # Correct alphas if they are outside doman of arccos
-    if isnan(alpha1):
-        alpha1 = 0
-        warn("alpha1 changed from NaN to 0")
-    if isnan(alpha2):
-        alpha2 = 0
-        warn("alpha2 changed from NaN to 0")
+    # %% If either point is far below  surface of body, abort and report not visible
+    # check if points are far below surface of body
+    r1_flag = False
+    if RE_prime / r1_mag > (1 + eps):
+        r1_flag = True
+        print(
+            f"RE_prime/r1_mag={RE_prime/r1_mag}, (RE_prime={RE_prime}, r1_mag={r1_mag})"
+        )
+        # raise ValueError("RE_prime > r1_mag")
+        warn("RE_prime > r1_mag")
 
-    v = alpha1 + alpha2 - phi
+    r2_flag = False
+    if RE_prime / r2_mag > (1 + eps):
+        r2_flag = True
+        print(
+            f"RE_prime/r2_mag={RE_prime/r2_mag}, (RE_prime={RE_prime}, r2_mag={r2_mag})"
+        )
+        # raise ValueError("RE_prime > r2_mag")
+        warn("RE_prime > r2_mag")
 
-    # the checks for r_mag and test_var should ensure that v is a real number,
-    # but just in case, check again
-    if isnan(v):
-        print(f"alpha1={alpha1}, alpha2={alpha2}, phi={phi}")
-        print(f"r1={r1}, r2={r2}")
-        print(f"r1_mag={r1_mag}, r2_mag={r2_mag}")
-        raise TypeError("Error: v is NaN")
+    # If either point is far below surface, v and alphas are undefined.
+    # However, for v we don't want to return NaN, so just return a negative value
+    # let the user know via the warnings above.
+    if r1_flag or r2_flag:
+        v = -1
+        alpha1 = nan
+        alpha2 = nan
+    else:
+        # Nominal path, both points are >= body radius.
+        # Calc construction angles.
+        alpha1 = arccos(RE_prime / r1_mag)
+        alpha2 = arccos(RE_prime / r2_mag)
+        v = alpha1 + alpha2 - phi
+
+    # # the checks for r_mag and test_var should ensure that v is a real number,
+    # # but just in case, check again
+    # if isnan(v):
+    #     print(f"alpha1={alpha1}, alpha2={alpha2}, phi={phi}")
+    #     print(f"r1={r1}, r2={r2}")
+    #     print(f"r1_mag={r1_mag}, r2_mag={r2_mag}")
+    #     raise TypeError("Error: v is NaN")
 
     return v, phi, alpha1, alpha2
 
