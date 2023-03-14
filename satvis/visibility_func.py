@@ -8,7 +8,18 @@ from warnings import warn
 
 # Third Party Imports
 from intervaltree import Interval, IntervalTree
-from numpy import append, arange, arccos, array, dot, isnan, isreal, nan, ndarray, sign
+from numpy import (
+    append,
+    arange,
+    arccos,
+    array,
+    dot,
+    isnan,
+    isreal,
+    nan,
+    ndarray,
+    sign,
+)
 from numpy.linalg import norm
 from numpy.polynomial import Polynomial
 
@@ -84,18 +95,18 @@ def visibilityFunc(
     r1_flag = False
     if RE_prime / r1_mag > (1 + eps):
         r1_flag = True
-        print(
-            f"RE_prime/r1_mag={RE_prime/r1_mag}, (RE_prime={RE_prime}, r1_mag={r1_mag})"
-        )
+        # print(
+        #     f"RE_prime/r1_mag={RE_prime/r1_mag}, (RE_prime={RE_prime}, r1_mag={r1_mag})"
+        # )
         # raise ValueError("RE_prime > r1_mag")
         warn("RE_prime > r1_mag")
 
     r2_flag = False
     if RE_prime / r2_mag > (1 + eps):
         r2_flag = True
-        print(
-            f"RE_prime/r2_mag={RE_prime/r2_mag}, (RE_prime={RE_prime}, r2_mag={r2_mag})"
-        )
+        # print(
+        #     f"RE_prime/r2_mag={RE_prime/r2_mag}, (RE_prime={RE_prime}, r2_mag={r2_mag})"
+        # )
         # raise ValueError("RE_prime > r2_mag")
         warn("RE_prime > r2_mag")
 
@@ -213,7 +224,9 @@ def zeroCrossingFit(
             # wait for 2 crossings to appear, where 2nd crossing is a
             # set time
             if len(crossings) > 1 and sign(riseSet[crossIndx]) == -1:
-                temp = Interval(crossings[crossIndx - 1], crossings[crossIndx], id)
+                temp = Interval(
+                    crossings[crossIndx - 1], crossings[crossIndx], id
+                )
                 tree.add(temp)
             # create interval if satellite starts in visibility window
             elif len(crossings) == 1 and startV == 1:
@@ -257,7 +270,9 @@ def findCrossing(
     # get roots that are in domain (range) of the
     # polynomial (t[i-3] and t[i])
     # values of t where 0-crossings occurred
-    inRangeRoots = realRoots[(realRoots < poly.domain[1]) & (realRoots > poly.domain[0])]
+    inRangeRoots = realRoots[
+        (realRoots < poly.domain[1]) & (realRoots > poly.domain[0])
+    ]
 
     return inRangeRoots
 
