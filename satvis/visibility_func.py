@@ -8,18 +8,7 @@ from warnings import warn
 
 # Third Party Imports
 from intervaltree import Interval, IntervalTree
-from numpy import (
-    append,
-    arange,
-    arccos,
-    array,
-    dot,
-    isnan,
-    isreal,
-    nan,
-    ndarray,
-    sign,
-)
+from numpy import append, arange, arccos, array, dot, isreal, nan, ndarray, sign
 from numpy.linalg import norm
 from numpy.polynomial import Polynomial
 
