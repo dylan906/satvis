@@ -84,19 +84,11 @@ def visibilityFunc(
     r1_flag = False
     if RE_prime / r1_mag > (1 + eps):
         r1_flag = True
-        # print(
-        #     f"RE_prime/r1_mag={RE_prime/r1_mag}, (RE_prime={RE_prime}, r1_mag={r1_mag})"
-        # )
-        # raise ValueError("RE_prime > r1_mag")
         warn("RE_prime > r1_mag")
 
     r2_flag = False
     if RE_prime / r2_mag > (1 + eps):
         r2_flag = True
-        # print(
-        #     f"RE_prime/r2_mag={RE_prime/r2_mag}, (RE_prime={RE_prime}, r2_mag={r2_mag})"
-        # )
-        # raise ValueError("RE_prime > r2_mag")
         warn("RE_prime > r2_mag")
 
     # If either point is far below surface, v and alphas are undefined.
