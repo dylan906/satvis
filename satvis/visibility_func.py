@@ -202,7 +202,10 @@ def zeroCrossingFit(
             # grab 4 v values
             vSnapshot = array([v[i - 3], v[i - 2], v[i - 1], v[i]])
 
-            crossings = append(crossings, findCrossing(tSnapshot, vSnapshot, 3))
+            # Get new crossing.
+            new_crossings = findCrossing(tSnapshot, vSnapshot, 3)
+            single_crossing = trimCrossings(new_crossings)
+            crossings = append(crossings, single_crossing)
 
             # determine if zero-crossing was a rise or set time and assign
             # val to vector
@@ -234,12 +237,28 @@ def zeroCrossingFit(
     return crossings, riseSet, tree
 
 
+def trimCrossings(crossings: ndarray) -> ndarray:
+    """Trim extra (false) crossings from array."""
+
+    # Get new crossing; grab single element from new_crossings in case
+    # multiple crossings are returned. This happens in edge case where
+    # crossings occur between i=0/1 and i=1/2 or i=0/1, 1/2, and 2/3
+    if len(crossings) == 1:
+        # Single crossing detected, return input
+        c = crossings[0]
+    elif len(crossings) in [2, 3]:
+        # 2 or 3 crossings detected, return the 1st entry.
+        c = crossings[1]
+
+    return c
+
+
 def findCrossing(
     t: ndarray,
     v: ndarray,
     order: int,
 ) -> ndarray[float]:
-    """Fits a 3rd order polynomial to 4 points and finds root.
+    """Fits a N-order polynomial to 4 points and finds root.
 
     Args:
         t (`ndarray`): [4,] Time values.

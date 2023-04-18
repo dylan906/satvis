@@ -160,6 +160,34 @@ ax.plot(crossings, riseSet, marker="|", linestyle="None")
 ax.plot(t, vis_a)
 ax.set_title("starts stradling 0 (--++++)")
 
+# Double-crossing in a window down-up  (+-+++)
+vis_a = array([1, -0.2, 0.5, 4, 2])
+[crossings, riseSet, visTree] = zeroCrossingFit(vis_a, t, "der")
+print("\n double crossing (+-+++)")
+print(f"crossings={crossings} \nriseSet={riseSet}")
+print(f"tree={visTree}")
+
+# Double-crossing in a window up-down (-+---)
+vis_a = array([-1, 0.2, -0.5, -4, -2])
+[crossings, riseSet, visTree] = zeroCrossingFit(vis_a, t, "der")
+print("\n double crossing (-+---)")
+print(f"crossings={crossings} \nriseSet={riseSet}")
+print(f"tree={visTree}")
+
+# Triple-crossing in a window down-up-down  (+-+--)
+vis_a = array([1, -0.2, 0.5, -4, -2])
+[crossings, riseSet, visTree] = zeroCrossingFit(vis_a, t, "der")
+print("\n triple crossing (+-+--)")
+print(f"crossings={crossings} \nriseSet={riseSet}")
+print(f"tree={visTree}")
+
+# Triple-crossing in a window up-down-up  (-+-++)
+vis_a = array([-1, 0.2, -0.5, 4, 2])
+[crossings, riseSet, visTree] = zeroCrossingFit(vis_a, t, "der")
+print("\n triple crossing (-+-++)")
+print(f"crossings={crossings} \nriseSet={riseSet}")
+print(f"tree={visTree}")
+
 
 # %% Long time vector
 print("\nLong tests \n")
