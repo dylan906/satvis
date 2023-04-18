@@ -1,6 +1,6 @@
 [project]
 name = "satvis"
-version = "0.1.5"
+version = "0.2.0"
 description = "Satellite LOS visibility calculator"
 readme = "README.md"
 license = { file="LICENSE" }
