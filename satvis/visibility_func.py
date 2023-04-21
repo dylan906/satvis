@@ -8,7 +8,19 @@ from warnings import warn
 
 # Third Party Imports
 from intervaltree import Interval, IntervalTree
-from numpy import append, arange, arccos, array, dot, isreal, nan, ndarray, sign
+from numpy import (
+    append,
+    arange,
+    arccos,
+    array,
+    dot,
+    isreal,
+    logical_and,
+    nan,
+    ndarray,
+    sign,
+    where,
+)
 from numpy.linalg import norm
 from numpy.polynomial import Polynomial
 
@@ -196,7 +208,7 @@ def zeroCrossingFit(
 
             # Get new crossing.
             new_crossings = findCrossing(tSnapshot, vSnapshot, 3)
-            single_crossing = trimCrossings(new_crossings)
+            single_crossing = trimCrossings(new_crossings, tSnapshot)
             crossings = append(crossings, single_crossing)
 
             # determine if zero-crossing was a rise or set time and assign
@@ -229,18 +241,35 @@ def zeroCrossingFit(
     return crossings, riseSet, tree
 
 
-def trimCrossings(crossings: ndarray) -> ndarray:
-    """Trim extra (false) crossings from array."""
+def trimCrossings(crossings: ndarray, time_snapshot: ndarray) -> ndarray:
+    """Trim extra (false) crossings from array.
+
+    Args:
+        crossings (`ndarray`): An array of crossing times.
+        time_snapshot (`ndarray`): A 4-element array of times encompassing crossings
+            (i.e. min(time_snapshot) < min(crossings) and
+            max(time_snapshot) > max(crossings)).
+
+    Returns:
+        `ndarray`: A single time from crossing that is in between time_snapshot[1]
+            and time_snapshot[2].
+    """
+    assert len(time_snapshot) == 4
 
     # Get new crossing; grab single element from new_crossings in case
-    # multiple crossings are returned. This happens in edge case where
-    # crossings occur between i=0/1 and i=1/2 or i=0/1, 1/2, and 2/3
+    # multiple crossings are returned.
     if len(crossings) == 1:
         # Single crossing detected, return input
         c = crossings[0]
-    elif len(crossings) in [2, 3]:
-        # 2 or 3 crossings detected, return the 1st entry.
-        c = crossings[1]
+    else:
+        # c = crossings[1]
+        lower_bound = time_snapshot[1]
+        upper_bound = time_snapshot[2]
+        indx = where(
+            logical_and(crossings <= upper_bound, crossings >= lower_bound)
+        )
+        assert len(indx) == 1
+        c = crossings[indx]
 
     return c
 
