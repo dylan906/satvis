@@ -14,6 +14,7 @@ from numpy import (
     arccos,
     array,
     dot,
+    float32,
     isreal,
     logical_and,
     nan,
@@ -133,7 +134,7 @@ def zeroCrossingFit(
     v: ndarray,
     t: ndarray,
     id: object = None,
-) -> Tuple[ndarray[float], ndarray[float], IntervalTree]:
+) -> Tuple[ndarray[float], ndarray[int], IntervalTree]:
     """Interpolates visibility windows from sparse visibility data.
 
         Fit curves around zero-crossings of visibility function.
@@ -149,9 +150,9 @@ def zeroCrossingFit(
         id (`any`): (Optional) Identifier for interval tree
 
     Returns:
-        crossings (`ndarray`): [1 x M] array of times at which the
+        crossings (`ndarray[float]`): [1 x M] array of times at which the
             visibility function crosses 0
-        riseSet (`ndarray`): [1 x M] array of +-1 indicating if associated
+        riseSet (`ndarray[int]`): [1 x M] array of +-1 indicating if associated
             value in crossings is a rise point (+1) or set point (-1)
         tree (`IntervalTree`): Interval tree object of time bounds during
             which visibility function is >1
@@ -162,8 +163,8 @@ def zeroCrossingFit(
         when t[0] and t[1] straddle v=0.
     """
     # initialize
-    crossings = []
-    riseSet = []
+    crossings = array([], dtype=float32)
+    riseSet = array([], dtype=int)
     tree = IntervalTree()
     crossIndx = -1
 
