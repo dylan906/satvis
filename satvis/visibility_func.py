@@ -194,17 +194,18 @@ def zeroCrossingFit(
         # print('i =' + str(i))
         if i == 3:
             #  starting visibility sign (+1 or -1)
-            startV = sign(v[0])
+            startV = sign(v[1])
+
+        # print('i =' + str(i))
+        # grab 4 time values
+        tSnapshot = array([t[i - 3], t[i - 2], t[i - 1], t[i]])
+        # grab 4 v values
+        vSnapshot = array([v[i - 3], v[i - 2], v[i - 1], v[i]])
 
         # fit with 2 mid-points on either side of zero
-        if sign(v[i - 1]) != sign(v[i - 2]):
+        # if sign(v[i - 1]) != sign(v[i - 2]):
+        if sign(vSnapshot[1]) != sign(vSnapshot[2]):
             crossIndx += 1
-
-            # print('i =' + str(i))
-            # grab 4 time values
-            tSnapshot = array([t[i - 3], t[i - 2], t[i - 1], t[i]])
-            # grab 4 v values
-            vSnapshot = array([v[i - 3], v[i - 2], v[i - 1], v[i]])
 
             # Get new crossing.
             new_crossings = findCrossing(tSnapshot, vSnapshot, 3)
