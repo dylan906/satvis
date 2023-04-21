@@ -4,7 +4,7 @@ from __future__ import annotations
 
 # Third Party Imports
 from matplotlib import pyplot as plt
-from numpy import array, linspace, sin, zeros
+from numpy import arange, array, linspace, sin, zeros
 
 # satvis Imports
 from satvis.visibility_func import visibilityFunc, zeroCrossingFit
@@ -185,6 +185,22 @@ print(f"tree={visTree}")
 vis_a = array([-1, 0.2, -0.5, 4, 2])
 [crossings, riseSet, visTree] = zeroCrossingFit(vis_a, t, "der")
 print("\n triple crossing (-+-++)")
+print(f"crossings={crossings} \nriseSet={riseSet}")
+print(f"tree={visTree}")
+
+# More than 1 frame, double-crossing, up-down (...-+--)
+vis_a = array([-1, -1, -1, -1, -0.2, +0.5, -4, -2])
+t = arange(0, len(vis_a))
+[crossings, riseSet, visTree] = zeroCrossingFit(vis_a, t, "der")
+print("\n >1 frame, double-crossing (...-+--)")
+print(f"crossings={crossings} \nriseSet={riseSet}")
+print(f"tree={visTree}")
+
+# More than 1 frame, double-crossing, down-up (...+-++)
+vis_a = array([1, 1, 1, 1, 0.2, -0.5, 4, 2])
+t = arange(0, len(vis_a))
+[crossings, riseSet, visTree] = zeroCrossingFit(vis_a, t, "der")
+print("\n >1 frame, double-crossing (...+-++)")
 print(f"crossings={crossings} \nriseSet={riseSet}")
 print(f"tree={visTree}")
 
