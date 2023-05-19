@@ -11,7 +11,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 authors = [
-    {name = "Dylan Penn", email = "dylanrpenn@vt.edu"}
+    {name = "Dylan Penn", email = "dylan.penn@vt.edu"}
 ]
 dependencies = [
     "matplotlib>=3.5",
