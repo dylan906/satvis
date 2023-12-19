@@ -399,3 +399,32 @@ def visDerivative(
     vis_der = a1dot + a2dot - phidot
 
     return vis_der.item()
+
+
+def calcVisAndDerVis(
+    r1: ndarray,
+    r1dot: ndarray,
+    r2: ndarray,
+    r2dot: ndarray,
+    RE: float,
+    hg: float = 0,
+) -> tuple[float, float]:
+    """Calculate visibility and derivative between two points in space.
+
+    Args:
+        r1 (ndarray): Position vector of the first point.
+        r1dot (ndarray): Velocity vector of the first point.
+        r2 (ndarray): Position vector of the second point.
+        r2dot (ndarray): Velocity vector of the second point.
+        RE (float): Earth's radius.
+        hg (float, optional): Height of the observer above the Earth's
+        surface. Defaults to 0.
+
+    Returns:
+        tuple[float, float]: A tuple containing the visibility and derivative
+        of visibility.
+    """
+    vis, phi, a1, a2 = visibilityFunc(r1, r2, RE, hg)
+    der_vis = visDerivative(r1, r1dot, r2, r2dot, a1, a2, phi, RE, hg)
+
+    return vis, der_vis
