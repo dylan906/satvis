@@ -395,6 +395,7 @@ def visDerivative(
     a1dot = RE_prime * r1dot_mag / (r1_mag**2 * sin(a1))
     a2dot = RE_prime * r2dot_mag / (r2_mag**2 * sin(a2))
 
+    # if phi == 0 (can happen when position vectors are colinear), then component0 = inf
     component0 = 1 / (r1_mag**2 * r2_mag**2 * sin(phi))
     component1 = (r1dot.T @ r2 + r1.T @ r2dot) * r1_mag * r2_mag
     component2 = r1dot_mag * r2_mag + r1_mag * r2dot_mag
