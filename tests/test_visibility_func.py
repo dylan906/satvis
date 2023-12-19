@@ -251,8 +251,8 @@ print(visTree3)
 
 # %% Test visDerivative
 print("\n visDerivative tests...")
-r1 = array([[1, 2, 3]]).T
-r1dot = array([[4, 5, 6]]).T
+r1 = array([[1, 2, 3]])
+r1dot = array([4, 5, 6])
 r2 = array([[7, 8, 9]]).T
 r2dot = array([[10, 11, 12]]).T
 a1 = 0.5

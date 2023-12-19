@@ -13,6 +13,7 @@ from numpy import (
     arange,
     arccos,
     array,
+    atleast_2d,
     dot,
     float32,
     isreal,
@@ -377,7 +378,12 @@ def visDerivative(
         float: The derivative of the visibility function
     """
     for vec in [r1, r1dot, r2, r2dot]:
-        assert vec.shape == (3, 1)
+        assert vec.ndim <= 2
+
+    # convert to column vectors if not already
+    r1, r1dot, r2, r2dot = [
+        atleast_2d(vec).reshape(3, 1) for vec in [r1, r1dot, r2, r2dot]
+    ]
 
     RE_prime = RE + hg
 
