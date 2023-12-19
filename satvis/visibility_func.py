@@ -20,6 +20,7 @@ from numpy import (
     nan,
     ndarray,
     sign,
+    sin,
     where,
 )
 from numpy.linalg import norm
@@ -222,9 +223,7 @@ def zeroCrossingFit(
             # wait for 2 crossings to appear, where 2nd crossing is a
             # set time
             if len(crossings) > 1 and sign(riseSet[crossIndx]) == -1:
-                temp = Interval(
-                    crossings[crossIndx - 1], crossings[crossIndx], id
-                )
+                temp = Interval(crossings[crossIndx - 1], crossings[crossIndx], id)
                 tree.add(temp)
             # create interval if satellite starts in visibility window
             elif len(crossings) == 1 and startV == 1:
@@ -267,9 +266,7 @@ def trimCrossings(crossings: ndarray, time_snapshot: ndarray) -> ndarray:
         # c = crossings[1]
         lower_bound = time_snapshot[1]
         upper_bound = time_snapshot[2]
-        indx = where(
-            logical_and(crossings <= upper_bound, crossings >= lower_bound)
-        )
+        indx = where(logical_and(crossings <= upper_bound, crossings >= lower_bound))
         assert len(indx) == 1
         c = crossings[indx]
 
@@ -350,3 +347,55 @@ def isVis(
 
     # convert to regular bool from numpy.bool
     return bool(v > 0)
+
+
+def visDerivative(
+    r1: ndarray,
+    r1dot: ndarray,
+    r2: ndarray,
+    r2dot: ndarray,
+    a1: float,
+    a2: float,
+    phi: float,
+    RE: float,
+    hg: float = 0,
+) -> float:
+    """Calculate derivative of visibility function.
+
+    Args:
+        r1 (`ndarray`): [3 X 1] ECI position vector of object 1
+        r1dot (`ndarray`): [3 X 1] ECI velocity vector of object 1
+        r2 (`ndarray`): [3 X 1] ECI position vector of object 2
+        r2dot (`ndarray`): [3 X 1] ECI velocity vector of object 2
+        a1 (`float`): Construction angle 1 (rad)
+        a2 (`float`): Construction angle 2 (rad)
+        phi (`float`): Angle between position vectors (rad)
+        RE (`float`): Radius of the Earth
+        hg (`float`, optional): Height above the ground. Defaults to 0.
+
+    Returns:
+        float: The derivative of the visibility function
+    """
+    for vec in [r1, r1dot, r2, r2dot]:
+        assert vec.shape == (3, 1)
+
+    RE_prime = RE + hg
+
+    r1_mag = norm(r1)
+    r2_mag = norm(r2)
+    r1dot_mag = norm(r1dot)
+    r2dot_mag = norm(r2dot)
+
+    a1dot = RE_prime * r1dot_mag / (r1_mag**2 * sin(a1))
+    a2dot = RE_prime * r2dot_mag / (r2_mag**2 * sin(a2))
+
+    component0 = 1 / (r1_mag**2 * r2_mag**2 * sin(phi))
+    component1 = (r1dot.T @ r2 + r1.T @ r2dot) * r1_mag * r2_mag
+    component2 = r1dot_mag * r2_mag + r1_mag * r2dot_mag
+    component3 = r1.T @ r2
+
+    phidot = component0 * (-component1 + component2 * component3)
+
+    vis_der = a1dot + a2dot - phidot
+
+    return vis_der.item()

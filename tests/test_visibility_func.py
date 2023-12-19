@@ -7,7 +7,11 @@ from matplotlib import pyplot as plt
 from numpy import arange, array, linspace, sin, zeros
 
 # satvis Imports
-from satvis.visibility_func import visibilityFunc, zeroCrossingFit
+from satvis.visibility_func import (
+    visDerivative,
+    visibilityFunc,
+    zeroCrossingFit,
+)
 
 # %% Test visibilityFunc
 print("\n visibilityFunc simple tests...")
@@ -244,6 +248,21 @@ vis7 = array([-1, -3, -4, -5, -6])
     "hey",
 )
 print(visTree3)
+
+# %% Test visDerivative
+print("\n visDerivative tests...")
+r1 = array([[1, 2, 3]]).T
+r1dot = array([[4, 5, 6]]).T
+r2 = array([[7, 8, 9]]).T
+r2dot = array([[10, 11, 12]]).T
+a1 = 0.5
+a2 = 0.6
+phi = 0.7
+RE = 6371
+hg = 0
+
+output = visDerivative(r1, r1dot, r2, r2dot, a1, a2, phi, RE, hg)
+print(f"{output=}")
 
 # %% README Example
 print("\n Readme example...")
