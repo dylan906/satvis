@@ -408,7 +408,7 @@ def visDerivative(
     # if phidot == inf, then vis_der = inf, and likewise with -inf
     vis_der = a1dot + a2dot - phidot
 
-    return vis_der.item()
+    return vis_der.item(), phidot.item(), a1dot, a2dot
 
 
 def calcVisAndDerVis(
