@@ -375,7 +375,8 @@ def visDerivative(
         hg (`float`, optional): Height above the ground. Defaults to 0.
 
     Returns:
-        float: The derivative of the visibility function
+        float: The derivative of the visibility function. If phu == 0, then return
+            = + or - np.Inf, depending on other inputs.
     """
     for vec in [r1, r1dot, r2, r2dot]:
         assert vec.ndim <= 2
@@ -401,8 +402,10 @@ def visDerivative(
     component2 = r1dot_mag * r2_mag + r1_mag * r2dot_mag
     component3 = r1.T @ r2
 
+    # if component0 == inf, then phidot = + or - inf
     phidot = component0 * (-component1 + component2 * component3)
 
+    # if phidot == inf, then vis_der = inf, and likewise with -inf
     vis_der = a1dot + a2dot - phidot
 
     return vis_der.item()
