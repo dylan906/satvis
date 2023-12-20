@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 # Third Party Imports
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 from matplotlib import pyplot as plt
 from numpy import arange, array, linspace, sin, zeros
 
 # satvis Imports
 from satvis.visibility_func import (
+    calcVisAndDerVis,
     visDerivative,
     visibilityFunc,
     zeroCrossingFit,
@@ -263,6 +266,47 @@ hg = 0
 
 output = visDerivative(r1, r1dot, r2, r2dot, a1, a2, phi, RE, hg)
 print(f"{output=}")
+
+# Test that visDerivative and visibilityFunc are consistent
+r1 = [array([1, 0, 0])] * 5
+r2 = [array([0, 1, 0])]
+r1_dot = [array([0, 0, 0])] * 5
+r2_dot = [array([0, 1, 0])] * 5
+for _ in range(4):
+    r2.append(r2[-1] + array([0, 0.3, 0]))
+
+vis_history = []
+vis_der_history = []
+for idx, (i, j, ii, jj) in enumerate(zip(r1, r2, r1_dot, r2_dot)):
+    vis, vis_der = calcVisAndDerVis(
+        r1=i,
+        r2=j,
+        r1dot=ii,
+        r2dot=jj,
+        RE=0.9,
+    )
+    vis_history.append(vis)
+    vis_der_history.append(vis_der)
+
+# Plot vis history and vis_der_history
+fig, (ax1, ax2) = plt.subplots(2, 1)
+ax1.plot(range(len(vis_history)), vis_history)
+ax1.set_title("Visibility History")
+ax2.plot(range(len(vis_der_history)), vis_der_history)
+ax2.set_title("Visibility Derivative History")
+
+# plot r1 and r2 in 2d space
+fig, ax = plt.subplots()
+r1_arr = array(r1)
+r2_arr = array(r2)
+ax.plot(r1_arr[:, 0], r1_arr[:, 1], "o")
+ax.plot(r2_arr[:, 0], r2_arr[:, 1], "x")
+# Create a circle with radius 0.9 centered at (0, 0)
+circle = patches.Circle((0, 0), 0.9, fill=False)
+for i, j in zip(r1, r2):
+    ax.plot([i[0], j[0]], [i[1], j[1]], "k-")
+# Add the circle to the ax1
+ax.add_patch(circle)
 
 # %% README Example
 print("\n Readme example...")
