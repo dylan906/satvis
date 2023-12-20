@@ -1,0 +1,78 @@
+[flake8]
+
+# Select flake8 error types
+extend-select = C, D, E, F, W, W504, B, B950, RST
+
+# Ignores due to clobbering with pylint are designated.
+# Ignores due to cloberring with black are designated.
+# The rest are opinionated.
+
+ignore =
+    # W503 line break before binary operator - black
+    W503, 
+
+extend-ignore =
+    # E501,  # E501: line too long - black
+    # E203: whitespace before ':' - black
+    E203,  
+    # E266: too many leading '#' for block comment
+    E266,  
+    # Google Python style is not RST until after processed by Napoleon
+    # See https://github.com/peterjc/flake8-rst-docstrings/issues/17
+    RST201,
+    RST203,
+    RST301,
+    RST215,
+    RST213,
+
+# These directories are ignored my flake8
+exclude =
+    .git,
+    __pycache__,
+    .vscode,
+    .gitlab,
+    coverage,
+    **/logs,
+    **/build,
+    **/dist,
+    **/gen,
+
+
+# Enforces complexity restrictions
+max-complexity = 12
+
+# My standard line lengths
+max-line-length = 89
+
+# Hang closing brackets rather than match the indentation
+hang-closing = False
+
+# Number of occurrences of each error code
+statistics = True
+
+# Builtin objects, functions, names, etc to ignore
+builtins = _,
+
+# Tell flake8-docstrings to use google docstring configuration
+docstring-convention = google
+
+# RST docstring configuration
+rst-roles =
+    class,
+    func,
+    ref,
+    meth,
+    attr,
+    data,
+    py: data,
+    mod,
+    const,
+    exc,
+    obj,
+    cite: t,
+    cite: p,
+    command,
+
+rst-directives =
+    envvar,
+    exception,
