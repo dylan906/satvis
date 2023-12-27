@@ -16,12 +16,14 @@ from satvis.visibility_func import (
 # Test that visDerivative and visibilityFunc are consistent
 n = 50
 t = linspace(0, 3 * pi / 2 + 0.1, num=n)
-r1 = stack([1.1 * ones(n), zeros(n), zeros(n)], axis=1)
+r1 = stack([1.0 * ones(n), zeros(n), zeros(n)], axis=1)
 r2 = stack((sin(t), cos(t), zeros(n)), axis=1)
 r1_dot = stack([zeros(n), zeros(n), zeros(n)], axis=1)
 # r2_dot = diff(r2, axis=0)
 # r2_dot = stack([zeros(n), zeros(n), zeros(n)], axis=1)
 r2_dot = stack((cos(t), sin(t), zeros(n)), axis=1)
+r1_mag_dot = zeros(n)
+r2_mag_dot = zeros(n)
 
 vis_history = []
 vis_der_history = []
@@ -35,10 +37,21 @@ c0_history = []
 c1_history = []
 c2_history = []
 
-for idx, (i, j, ii, jj) in enumerate(zip(r1, r2, r1_dot, r2_dot)):
+for idx, (i, j, ii, jj, iii, jjj) in enumerate(
+    zip(r1, r2, r1_dot, r2_dot, r1_mag_dot, r2_mag_dot)
+):
     vis, phi, a1, a2 = _simpleVisibilityFunc(i, j, 0.9, 0)
     vis_der, phi_der, a1_der, a2_der, c0, c1, c2 = visDerivative(
-        i, ii, j, jj, a1, a2, phi, 0.9
+        r1=i,
+        r1dot=ii,
+        r1mag_dot=iii,
+        r2=j,
+        r2dot=jj,
+        r2mag_dot=jjj,
+        a1=a1,
+        a2=a2,
+        phi=phi,
+        RE=0.9,
     )
     vis_history.append(vis)
     vis_der_history.append(vis_der)
@@ -61,40 +74,40 @@ data = [
     vis_der_history,
     phi_history,
     phi_der_history,
-    # a1_history,
+    a1_history,
     a1_der_history,
-    # a2_history,
+    a2_history,
     a2_der_history,
     c0_history,
     c1_history,
     c2_history,
-    vis_hist_diff,
+    # vis_hist_diff,
 ]
 labels = [
     "Visibility History",
     "Visibility Derivative History",
     "Phi History",
     "Phi der History",
-    # "a1 History",
+    "a1 History",
     "a1der History",
-    # "a2 History",
+    "a2 History",
     "a2der History",
     "c0 History",
     "c1 History",
     "c2 History",
-    "vis_hist_diff",
+    # "vis_hist_diff",
 ]
 
-fig, axs = plt.subplots(5, 2)
+fig, axs = plt.subplots(4, 3)
 
 for i, (d, label) in enumerate(zip(data, labels)):
-    row = i // 2
-    col = i % 2
+    row = i // 3
+    col = i % 3
     axs[row, col].plot(range(len(d)), d)
     axs[row, col].set_ylabel(label)
 
     # Add blue squares for negative values in vis_der_history
-    if label in ["Visibility Derivative History", "Phi der History"]:
+    if label in ["Visibility Derivative History", "Phi der History", "c0 History"]:
         negative_indices = [j for j, value in enumerate(d) if value < 0]
         negative_values = [value for value in d if value < 0]
         axs[row, col].scatter(

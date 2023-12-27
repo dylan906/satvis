@@ -379,8 +379,10 @@ def isVis(
 def visDerivative(
     r1: ndarray,
     r1dot: ndarray,
+    r1mag_dot: float,
     r2: ndarray,
     r2dot: ndarray,
+    r2mag_dot: float,
     a1: float,
     a2: float,
     phi: float,
@@ -416,21 +418,30 @@ def visDerivative(
 
     r1_mag = norm(r1)
     r2_mag = norm(r2)
-    r1dot_mag = norm(r1dot)
-    r2dot_mag = norm(r2dot)
+    # r1dot_mag = norm(r1dot)
+    # r2dot_mag = norm(r2dot)
 
-    a1dot = RE_prime * r1dot_mag / (r1_mag**2 * sin(a1))
-    a2dot = RE_prime * r2dot_mag / (r2_mag**2 * sin(a2))
+    # Wrap a1 and a2 to be within [-pi, pi]
+    # sgn = sign(cross(r1.T, r2.T)[0][2])
+    # a1 = sgn * (fmod(a1 + pi, 2 * pi) - pi)
+    # a2 = sgn * (fmod(a2 + pi, 2 * pi) - pi)
+
+    a1dot = RE_prime * r1mag_dot / (r1_mag**2 * sin(a1))
+    a2dot = RE_prime * r2mag_dot / (r2_mag**2 * sin(a2))
+    # a1dot = RE_prime * r1dot_mag / (r1_mag**2 * sin(a1))
+    # a2dot = RE_prime * r2dot_mag / (r2_mag**2 * sin(a2))
 
     # Wrap the angle to be within [-pi, pi]
     sgn = sign(cross(r1.T, r2.T)[0][2])
     wrapped_phi = sgn * (fmod(phi + pi, 2 * pi) - pi)
+    print(f"Line {currentframe().f_lineno}: phi = {phi}")
     print(f"Line {currentframe().f_lineno}: wrapped_phi = {wrapped_phi}")
 
     # if phi == 0 (can happen when position vectors are colinear), then component0 = inf
-    component0 = 1 / (r1_mag**2 * r2_mag**2 * sin(wrapped_phi))
+    component0 = 1 / (r1_mag**2 * r2_mag**2 * sin(phi))
     component1 = -(r1dot.T @ r2 + r1.T @ r2dot) * r1_mag * r2_mag
-    component2 = (r1dot_mag * r2_mag + r1_mag * r2dot_mag) * r1.T @ r2
+    component2 = (r1mag_dot * r2_mag + r1_mag * r2mag_dot) * r1.T @ r2
+    # component2 = (r1dot_mag * r2_mag + r1_mag * r2dot_mag) * r1.T @ r2
 
     # if component0 == inf, then phidot = + or - inf
     phidot = component0 * (component1 + component2)
