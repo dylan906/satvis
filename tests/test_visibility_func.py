@@ -8,7 +8,6 @@ from numpy import arange, array, linspace, sin, zeros
 
 # satvis Imports
 from satvis.visibility_func import (
-    calcVisAndDerVis,
     visDerivative,
     visibilityFunc,
     zeroCrossingFit,
@@ -251,19 +250,34 @@ vis7 = array([-1, -3, -4, -5, -6])
 print(visTree3)
 
 # %% Test visDerivative
-print("\n visDerivative tests...")
+print("\nvisDerivative tests...")
 r1 = array([[1, 2, 3]])
 r1dot = array([4, 5, 6])
+r1mag_dot = 1
 r2 = array([[7, 8, 9]]).T
 r2dot = array([[10, 11, 12]]).T
+r2mag_dot = 2
 a1 = 0.5
 a2 = 0.6
 phi = 0.7
 RE = 6371
-hg = 0
 
-output = visDerivative(r1, r1dot, r2, r2dot, a1, a2, phi, RE, hg)
-print(f"{output=}")
+vis_der, phidot, a1dot, a2dot = visDerivative(
+    r1=r1,
+    r1dot=r1dot,
+    r1mag_dot=r1mag_dot,
+    r2=r2,
+    r2dot=r2dot,
+    r2mag_dot=r2mag_dot,
+    a1=a1,
+    a2=a2,
+    phi=phi,
+    RE=RE,
+)
+print(f"{vis_der=}")
+print(f"{phidot=}")
+print(f"{a1dot=}")
+print(f"{a2dot=}")
 
 
 # %% README Example
