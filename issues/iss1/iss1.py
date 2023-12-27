@@ -4,17 +4,23 @@ from __future__ import annotations
 # Third Party Imports
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
-from numpy import array, cos, linspace, ones, sin, stack, zeros
+from numpy import array, cos, diff, linspace, ones, pi, sin, stack, zeros
 
 # satvis Imports
-from satvis.visibility_func import visDerivative, visibilityFunc
+from satvis.visibility_func import (
+    _simpleVisibilityFunc,
+    visDerivative,
+    visibilityFunc,
+)
 
 # Test that visDerivative and visibilityFunc are consistent
-n = 100
-t = linspace(0, 6, num=n)
-r1 = stack([ones(n), -1 * ones(n), zeros(n)], axis=1)
+n = 50
+t = linspace(0, 3 * pi / 2 + 0.1, num=n)
+r1 = stack([1.1 * ones(n), zeros(n), zeros(n)], axis=1)
 r2 = stack((sin(t), cos(t), zeros(n)), axis=1)
 r1_dot = stack([zeros(n), zeros(n), zeros(n)], axis=1)
+# r2_dot = diff(r2, axis=0)
+# r2_dot = stack([zeros(n), zeros(n), zeros(n)], axis=1)
 r2_dot = stack((cos(t), sin(t), zeros(n)), axis=1)
 
 vis_history = []
@@ -25,10 +31,15 @@ a2_history = []
 phi_der_history = []
 a1_der_history = []
 a2_der_history = []
+c0_history = []
+c1_history = []
+c2_history = []
 
 for idx, (i, j, ii, jj) in enumerate(zip(r1, r2, r1_dot, r2_dot)):
-    vis, phi, a1, a2 = visibilityFunc(i, j, 0.9, 0)
-    vis_der, phi_der, a1_der, a2_der = visDerivative(i, ii, j, jj, a1, a2, phi, 0.9)
+    vis, phi, a1, a2 = _simpleVisibilityFunc(i, j, 0.9, 0)
+    vis_der, phi_der, a1_der, a2_der, c0, c1, c2 = visDerivative(
+        i, ii, j, jj, a1, a2, phi, 0.9
+    )
     vis_history.append(vis)
     vis_der_history.append(vis_der)
     phi_history.append(phi)
@@ -37,24 +48,60 @@ for idx, (i, j, ii, jj) in enumerate(zip(r1, r2, r1_dot, r2_dot)):
     phi_der_history.append(phi_der)
     a1_der_history.append(a1_der)
     a2_der_history.append(a2_der)
+    c0_history.append(c0)
+    c1_history.append(c1)
+    c2_history.append(c2)
 
-# Plot vis history and vis_der_history
-fig, (ax1, ax2, ax3, ax4, ax5, ax6) = plt.subplots(6, 1)
-ax1.plot(range(len(vis_history)), vis_history)
-ax1.set_ylabel("Visibility History")
-ax2.plot(range(len(vis_der_history)), vis_der_history)
-negative_indices = [i for i, value in enumerate(vis_der_history) if value < 0]
-negative_values = [value for value in vis_der_history if value < 0]
-ax2.scatter(negative_indices, negative_values, color="blue", marker="s")
-ax2.set_ylabel("Visibility Derivative History")
-ax3.plot(range(len(phi_history)), phi_history)
-ax3.set_ylabel("Phi History")
-ax4.plot(range(len(phi_der_history)), phi_der_history)
-ax4.set_ylabel("Phi der History")
-ax5.plot(range(len(a1_der_history)), a1_der_history)
-ax5.set_ylabel("a1der History")
-ax6.plot(range(len(a2_der_history)), a2_der_history)
-ax6.set_ylabel("a2der History")
+vis_hist_diff = diff(vis_history)
+
+# # Plot vis history and vis_der_history
+# Create a list of data and labels
+data = [
+    vis_history,
+    vis_der_history,
+    phi_history,
+    phi_der_history,
+    # a1_history,
+    a1_der_history,
+    # a2_history,
+    a2_der_history,
+    c0_history,
+    c1_history,
+    c2_history,
+    vis_hist_diff,
+]
+labels = [
+    "Visibility History",
+    "Visibility Derivative History",
+    "Phi History",
+    "Phi der History",
+    # "a1 History",
+    "a1der History",
+    # "a2 History",
+    "a2der History",
+    "c0 History",
+    "c1 History",
+    "c2 History",
+    "vis_hist_diff",
+]
+
+fig, axs = plt.subplots(5, 2)
+
+for i, (d, label) in enumerate(zip(data, labels)):
+    row = i // 2
+    col = i % 2
+    axs[row, col].plot(range(len(d)), d)
+    axs[row, col].set_ylabel(label)
+
+    # Add blue squares for negative values in vis_der_history
+    if label in ["Visibility Derivative History", "Phi der History"]:
+        negative_indices = [j for j, value in enumerate(d) if value < 0]
+        negative_values = [value for value in d if value < 0]
+        axs[row, col].scatter(
+            negative_indices, negative_values, color="blue", marker="s"
+        )
+
+# plt.tight_layout()
 
 # plot r1 and r2 in 2d space
 fig, ax = plt.subplots()
@@ -67,6 +114,8 @@ circle = patches.Circle((0, 0), 0.9, fill=False)
 # Add the circle to the ax1
 ax.add_patch(circle)
 for i, j in zip(r1, r2):
-    ax.plot([i[0], j[0]], [i[1], j[1]], "k-")
+    # ax.plot([i[0], j[0]], [i[1], j[1]], "k-")
+    ax.plot([0, i[0]], [0, i[1]], "k-")
+    ax.plot([0, j[0]], [0, j[1]], "k-")
 
 plt.show()
