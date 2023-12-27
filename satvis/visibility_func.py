@@ -1,9 +1,13 @@
-"""Calculate visibility between two points near a spherical body."""
+"""Calculate visibility between two points near a spherical body.
+
+[1] J. A. Lawton, “Numerical method for rapidly determining satellite-satellite
+and satellite-ground station in-view periods,” Journal of Guidance, Control, and
+Dynamics, vol. 10, no. 1, pp. 32–36, Jan. 1987, doi: 10.2514/3.20177.
+"""
 # %% Imports
 from __future__ import annotations
 
 # Standard Library Imports
-from inspect import currentframe
 from typing import Tuple
 from warnings import warn
 
@@ -13,18 +17,14 @@ from numpy import (
     append,
     arange,
     arccos,
-    arctan2,
     array,
     atleast_2d,
-    cross,
     dot,
     float32,
-    fmod,
     isreal,
     logical_and,
     nan,
     ndarray,
-    pi,
     sign,
     sin,
     where,
@@ -132,27 +132,6 @@ def visibilityFunc(
     #     print(f"r1={r1}, r2={r2}")
     #     print(f"r1_mag={r1_mag}, r2_mag={r2_mag}")
     #     raise TypeError("Error: v is NaN")
-
-    return v, phi, alpha1, alpha2
-
-
-def _simpleVisibilityFunc(
-    r1: ndarray,
-    r2: ndarray,
-    RE: float,
-    hg: float,
-) -> Tuple[float, float, float, float]:
-    """Visibility function without all the error handling of visibilityFunc."""
-    RE_prime = RE + hg
-    r1_mag = norm(r1)
-    r2_mag = norm(r2)
-
-    alpha1 = arccos(RE_prime / r1_mag)
-    alpha2 = arccos(RE_prime / r2_mag)
-    phi = arccos(r1.T @ r2 / (r1_mag * r2_mag))
-    # print(f"{r1.T@r2}")
-
-    v = alpha1 + alpha2 - phi
 
     return v, phi, alpha1, alpha2
 
@@ -388,23 +367,38 @@ def visDerivative(
     phi: float,
     RE: float,
     hg: float = 0,
+    debug: bool = False,
 ) -> float:
     """Calculate derivative of visibility function.
 
+    Be careful to use the time derivative of the magnitude of the position for
+    r#mag_dot. Do not use the magnitude of the velocity vector (r#dot).
+
+    Eq. 2 from [1].
+
     Args:
-        r1 (ndarray): [3 X 1] ECI position vector of object 1
-        r1dot (ndarray): [3 X 1] ECI velocity vector of object 1
-        r2 (ndarray): [3 X 1] ECI position vector of object 2
-        r2dot (ndarray): [3 X 1] ECI velocity vector of object 2
-        a1 (float): Construction angle 1 (rad)
-        a2 (float): Construction angle 2 (rad)
-        phi (float): Angle between position vectors (rad)
-        RE (float): Radius of the Earth
+        r1 (ndarray): [3 X 1] ECI position vector of the first object.
+        r1dot (ndarray): [3 X 1] ECI velocity vector of the first object.
+        r1mag_dot (float): Time derivative of the magnitude of the first object's
+            position vector.
+        r2 (ndarray): [3 X 1] ECI position vector of the second object.
+        r2dot (ndarray): [3 X 1] ECI velocity vector of the second object.
+        r2mag_dot (float): Time derivative of the magnitude of the second object's
+            position vector.
+        a1 (float): Construction angle 1 in radians.
+        a2 (float): Construction angle 2 in radians.
+        phi (float): Angle in radians between the position vectors of the two objects.
+        RE (float): Radius of the Earth (or other celestial body).
         hg (float, optional): Height above the ground. Defaults to 0.
+        debug (bool, optional): If True, return intermediate calculation values.
+            Defaults to False.
 
     Returns:
-        float: The derivative of the visibility function. If phu == 0, then return
+        float: The derivative of the visibility function. If phi == 0, then return
             = + or - np.Inf, depending on other inputs.
+        tuple: If debug is True, the function also returns the intermediate
+            calculations: phidot, a1dot, a2dot, and the components of the phidot
+            calculation.
     """
     for vec in [r1, r1dot, r2, r2dot]:
         assert vec.ndim <= 2
@@ -418,30 +412,18 @@ def visDerivative(
 
     r1_mag = norm(r1)
     r2_mag = norm(r2)
-    # r1dot_mag = norm(r1dot)
-    # r2dot_mag = norm(r2dot)
-
-    # Wrap a1 and a2 to be within [-pi, pi]
-    # sgn = sign(cross(r1.T, r2.T)[0][2])
-    # a1 = sgn * (fmod(a1 + pi, 2 * pi) - pi)
-    # a2 = sgn * (fmod(a2 + pi, 2 * pi) - pi)
 
     a1dot = RE_prime * r1mag_dot / (r1_mag**2 * sin(a1))
     a2dot = RE_prime * r2mag_dot / (r2_mag**2 * sin(a2))
-    # a1dot = RE_prime * r1dot_mag / (r1_mag**2 * sin(a1))
-    # a2dot = RE_prime * r2dot_mag / (r2_mag**2 * sin(a2))
-
-    # Wrap the angle to be within [-pi, pi]
-    sgn = sign(cross(r1.T, r2.T)[0][2])
-    wrapped_phi = sgn * (fmod(phi + pi, 2 * pi) - pi)
-    print(f"Line {currentframe().f_lineno}: phi = {phi}")
-    print(f"Line {currentframe().f_lineno}: wrapped_phi = {wrapped_phi}")
 
     # if phi == 0 (can happen when position vectors are colinear), then component0 = inf
     component0 = 1 / (r1_mag**2 * r2_mag**2 * sin(phi))
     component1 = -(r1dot.T @ r2 + r1.T @ r2dot) * r1_mag * r2_mag
     component2 = (r1mag_dot * r2_mag + r1_mag * r2mag_dot) * r1.T @ r2
-    # component2 = (r1dot_mag * r2_mag + r1_mag * r2dot_mag) * r1.T @ r2
+
+    # convert to scalar
+    component1 = component1.item()
+    component2 = component2.item()
 
     # if component0 == inf, then phidot = + or - inf
     phidot = component0 * (component1 + component2)
@@ -449,22 +431,27 @@ def visDerivative(
     # if phidot == inf, then vis_der = inf, and likewise with -inf
     vis_der = a1dot + a2dot - phidot
 
-    return (
-        vis_der.item(),
-        phidot.item(),
-        a1dot,
-        a2dot,
-        component0,
-        component1.item(),
-        component2.item(),
-    )
+    if debug:
+        return (
+            vis_der,
+            phidot,
+            a1dot,
+            a2dot,
+            component0,
+            component1,
+            component2,
+        )
+    else:
+        return vis_der, phidot, a1dot, a2dot
 
 
 def calcVisAndDerVis(
     r1: ndarray,
     r1dot: ndarray,
+    r1mag_dot: float,
     r2: ndarray,
     r2dot: ndarray,
+    r2mag_dot: float,
     RE: float,
     hg: float = 0,
 ) -> tuple[float, float]:
@@ -473,17 +460,23 @@ def calcVisAndDerVis(
     Args:
         r1 (ndarray): Position vector of the first point.
         r1dot (ndarray): Velocity vector of the first point.
+        r1mag_dot (float): Time derivative of the magnitude of the first object's
+            position vector.
         r2 (ndarray): Position vector of the second point.
         r2dot (ndarray): Velocity vector of the second point.
+        r2mag_dot (float): Time derivative of the magnitude of the second object's
+            position vector.
         RE (float): Earth's radius.
         hg (float, optional): Height of the observer above the Earth's
         surface. Defaults to 0.
 
     Returns:
-        tuple[float, float]: A tuple containing the visibility and derivative
-        of visibility.
+        float: The visibility function value (continuous).
+        float: The time derivative of the visibility function.
     """
     vis, phi, a1, a2 = visibilityFunc(r1, r2, RE, hg)
-    der_vis = visDerivative(r1, r1dot, r2, r2dot, a1, a2, phi, RE, hg)
+    der_vis = visDerivative(
+        r1, r1dot, r1mag_dot, r2, r2dot, r2mag_dot, a1, a2, phi, RE, hg
+    )
 
     return vis, der_vis
