@@ -51,7 +51,7 @@ def visibilityFunc(
 
     Returns:
         v (float): value of visibility function (positive indicates objects
-            can see each other). Returns -1 if either r1 or r1 are below
+            can see each other). Returns nan if either r1 or r1 are below
             surface of planet.
         phi (float): angle between position vectors
         alpha1 (float): Construction angle 1. Returns numpy.nan if either r1
@@ -112,11 +112,9 @@ def visibilityFunc(
         r2_flag = True
         warn("RE_prime > r2_mag")
 
-    # If either point is far below surface, v and alphas are undefined.
-    # However, for v we don't want to return NaN, so just return a negative value
-    # let the user know via the warnings above.
+    # If either point is far below surface, v and alphas are undefined; return nan.
     if r1_flag or r2_flag:
-        v = -1
+        v = nan
         alpha1 = nan
         alpha2 = nan
     else:
@@ -125,14 +123,6 @@ def visibilityFunc(
         alpha1 = arccos(RE_prime / r1_mag)
         alpha2 = arccos(RE_prime / r2_mag)
         v = alpha1 + alpha2 - phi
-
-    # # the checks for r_mag and test_var should ensure that v is a real number,
-    # # but just in case, check again
-    # if isnan(v):
-    #     print(f"alpha1={alpha1}, alpha2={alpha2}, phi={phi}")
-    #     print(f"r1={r1}, r2={r2}")
-    #     print(f"r1_mag={r1_mag}, r2_mag={r2_mag}")
-    #     raise TypeError("Error: v is NaN")
 
     return v, phi, alpha1, alpha2
 
