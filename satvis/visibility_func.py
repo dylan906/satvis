@@ -21,6 +21,7 @@ from numpy import (
     atleast_2d,
     dot,
     float32,
+    isnan,
     isreal,
     logical_and,
     nan,
@@ -474,8 +475,9 @@ def calcVisAndDerVis(
         float: The visibility function value (continuous).
         float: The time derivative of the visibility function.
     """
+    # This is a shortcut function, so discard extra outputs
     vis, phi, a1, a2 = visibilityFunc(r1, r2, RE, hg)
-    der_vis = visDerivative(
+    der_vis, _, _, _ = visDerivative(
         r1, r1dot, r1mag_dot, r2, r2dot, r2mag_dot, a1, a2, phi, RE, hg
     )
 
