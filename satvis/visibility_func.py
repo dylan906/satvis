@@ -21,7 +21,6 @@ from numpy import (
     atleast_2d,
     dot,
     float32,
-    isnan,
     isreal,
     logical_and,
     nan,
