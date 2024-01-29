@@ -48,6 +48,7 @@ def visibilityFunc(
         r2 (ndarray): [3 X 1] ECI position vector of object 2
         RE (float): Radius of planet
         hg (float): extra height restriction above planet surface
+        tol (float, optional): Tolerance for numerical errors. Defaults to 1e-13.
 
     Returns:
         v (float): value of visibility function (positive indicates objects
