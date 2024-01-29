@@ -39,6 +39,7 @@ def visibilityFunc(
     r2: ndarray,
     RE: float,
     hg: float,
+    tol: float = 1e-13,
 ) -> Tuple[float, float, float, float]:
     """Calculate visibility function for two position vectors.
 
@@ -64,7 +65,7 @@ def visibilityFunc(
     """
     # %% Params
     # small value for error threshold
-    eps = 1e-13
+    eps = tol
 
     # get magnitude of position vectors and radius of body
     RE_prime = RE + hg
