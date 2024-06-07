@@ -4,6 +4,7 @@
 and satellite-ground station in-view periods,” Journal of Guidance, Control, and
 Dynamics, vol. 10, no. 1, pp. 32–36, Jan. 1987, doi: 10.2514/3.20177.
 """
+
 # %% Imports
 from __future__ import annotations
 
